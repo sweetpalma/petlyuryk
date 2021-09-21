@@ -1,0 +1,45 @@
+{
+  "name": "petlyuryk",
+  "version": "1.0.0",
+  "author": "SweetPalma",
+  "license": "MIT",
+  "description": "Russophobic Telegram bot.",
+  "scripts": {
+    "start": "npm run start:dev",
+    "start:dev": "ts-node-dev -r dotenv/config ./src/index.ts --watch src",
+    "docker": "docker-compose up --build --remove-orphans bot || true",
+    "lint": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "botbuilder": "^4.14.1",
+    "botbuilder-adapter-web": "^1.0.9",
+    "botbuilder-storage-mongodb": "^1.0.8",
+    "botkit": "4.10.0",
+    "botkit-storage-mongo": "^1.0.7",
+    "botkit-storage-redis": "^1.1.0",
+    "dotenv": "^10.0.0",
+    "franc": "^5.0.0",
+    "lodash": "^4.17.21",
+    "mongodb": "^4.1.2",
+    "node-telegram-bot-api": "^0.54.0",
+    "redis": "^3.1.2",
+    "ts-node": "^10.2.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/bluebird": "^3.5.36",
+    "@types/express": "^4.17.13",
+    "@types/franc": "^5.0.1",
+    "@types/lodash": "^4.14.172",
+    "@types/node-telegram-bot-api": "^0.51.4",
+    "@types/redis": "^2.8.31",
+    "@types/string-format": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "eslint": "^8.7.0"
+  }
+}

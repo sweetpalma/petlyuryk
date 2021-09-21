@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  mongo:
+    container_name: petlyuryk-mongo
+    restart: "always"
+    image: mongo
+    logging:
+      driver: none
+    volumes:
+      - ./data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+  bot:
+    container_name: petlyuryk-bot
+    restart: "always"
+    build: .
+    depends_on:
+      - mongo
+    volumes:
+      - ./src:/app/src
+    environment:
+      - TELEGRAM_TOKEN
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+      - OPENWEATHER_TOKEN
+      - NTBA_FIX_319=1
+      - NTBA_FIX_350=1

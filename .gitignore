@@ -1,0 +1,17 @@
+# Installation:
+node_modules/
+
+# MongoDB data:
+data/
+
+# Build results:
+dist/
+
+# Old sources:
+src_old/
+
+# MacOS shit:
+.DS_Store
+
+# Environment data:
+.env
