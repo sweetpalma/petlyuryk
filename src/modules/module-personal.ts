@@ -10,39 +10,58 @@ import {
 } from '../strings';
 
 
-export const TRIGGER_THANKS_DIALOG = [
+const TRIGGER_ABOUT = [
+	regexPhrase(regexNamed(/розкажи про себе/i)),
+	regexPhrase(regexNamed(/хто ти\??/i)),
+];
+
+
+const TRIGGER_THANKS_DIALOG = [
 	regexPhrase(/Молодець/i),
 	regexPhrase(/Спасибі/i),
 	regexPhrase(/Дякую/i),
 ];
 
 
-export const TRIGGER_THANKS_GENERAL = [
+const TRIGGER_THANKS_GENERAL = [
 	regexPhrase(regexNamed(/(?:(ти|-) )?молодець/i)),
 	regexPhrase(regexNamed(/спасибі/i)),
 	regexPhrase(regexNamed(/дякую/i)),
 ];
 
 
-export const TRIGGER_AGRESSIVE_GENERAL = [
+const TRIGGER_AGRESSIVE_GENERAL = [
 	...INSULT_UKRAINIAN.map(word => regexPhrase(`Петлюрику?,? (?:(ти|-) )?${word}`, 'i')),
 	regexPhrase(/Пиздюрику?/i),
 	regexPhrase(/Хуюрику?/i),
 ];
 
 
-export const TRIGGER_AGRESSIVE_DIALOG = [
+const TRIGGER_AGRESSIVE_DIALOG = [
 	...INSULT_UKRAINIAN.map(word => regexPhrase(`ти ${word}`, 'i')),
 	regexPhrase(/Пиздюрику?/i),
 	regexPhrase(/Хуюрику?/i),
 ];
 
 
-export const RESPONSE_THANKS = [
+const RESPONSE_THANKS = [
 	'Звертайся',
-	'Завжди будь-ласка',
+	'Завжди будь ласка',
 	'Радий допомогти',
 ];
+
+
+const RESPONSE_ABOUT = `
+Я - Петлюрик, перший в світі бот-русофоб. Просто додай мене в групу і я буду робити наступне:
+
+• Визначати російську мову та нещадно карати за неї.
+• Аналізувати  валютний ринок ("Петлюрику, як там біток?").
+• Грати в рулетку з креолами ("Петлюрику, рулетка").
+• Славити Україну ("Петлюрику, слава Україні!").
+• Нищівно критикувати ("Петлюрику, струмінь").
+
+Маєте побажання та пропозиції? Мій автор готовий вас уважно вислухати: @nekodisaster.
+`;
 
 
 const isAdressedToBot = (controller: BotkitExtended, patterns: RegExp[]) => async (msg: BotkitMessage) => {
@@ -70,6 +89,10 @@ export default (controller: BotkitExtended) => {
 	controller.interrupts(TRIGGER_AGRESSIVE_GENERAL, 'message', async (bot, msg) => {
 		await bot.cancelAllDialogs();
 		await bot.beginDialog(DIALOG_AGRESSIVE);
+	});
+
+	controller.interrupts(TRIGGER_ABOUT, 'message', async (bot, msg) => {
+		await bot.say(RESPONSE_ABOUT);
 	});
 
 	controller.interrupts(isAdressedToBot(controller, TRIGGER_THANKS_DIALOG), 'message', async (bot, msg) => {

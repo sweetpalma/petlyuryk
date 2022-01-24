@@ -30,6 +30,7 @@ const RESPONSE_CURRENCY_UNKNOWN = [
 
 
 const CURRENCY_NICKNAME: {[key: string]: string} = {
+	'біток': 'BTC',
 	'біткоїн': 'BTC',
 	'біткоін': 'BTC',
 	'гривня': 'UAH',
