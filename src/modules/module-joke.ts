@@ -21,6 +21,14 @@ const RETARDED_JOKES: Array<[RegExp[], string[]]> = [
 			'Рука в гавнє',
 		],
 	],
+		[
+		[
+			regexPhrase(/а$/i),
+		],
+		[
+			'Хуй на',
+		],
+	],
 	[
 		[
 			regexPhrase(/да$/i),
