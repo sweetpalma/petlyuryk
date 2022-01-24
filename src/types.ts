@@ -14,6 +14,7 @@ export interface MemoryGlobals {
 
 export interface MetadataMessage {
 	recipientType: 'all' | 'user' | 'bot';
+	replyToUserId?: string;
 	replyToMessageId?: string;
 	messageId: string;
 }

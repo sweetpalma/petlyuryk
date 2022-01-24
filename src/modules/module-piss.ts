@@ -33,8 +33,8 @@ const RESPONSE_PISS_NICE_TRY = [
 
 export default (controller: BotkitExtended) => {
 	controller.hears(TRIGGER_PISS, 'message', async (bot, msg) => {
-		const { recipientType, replyToMessageId } = controller.adapter.getMessageMetadata(msg);
-		if (isRouletteWinner(controller, msg.user)) {
+		const { recipientType, replyToMessageId, replyToUserId } = controller.adapter.getMessageMetadata(msg);
+		if (replyToUserId && isRouletteWinner(controller, replyToUserId)) {
 			await bot.say({
 	    	text: sample(RESPONSE_PISS_IMMUNE)!,
 	    });

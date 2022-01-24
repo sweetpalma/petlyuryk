@@ -167,6 +167,7 @@ export class TelegramAdapter extends BotAdapter {
 		}
 		const metadata: MetadataMessage = {
 			messageId: msg.message_id.toString(),
+			replyToUserId: msg.reply_to_message?.from?.id.toString(),
 			replyToMessageId: msg.reply_to_message?.message_id.toString(),
 			recipientType: this.getRecipientType(msg),
 		};
