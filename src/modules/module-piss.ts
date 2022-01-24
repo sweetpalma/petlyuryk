@@ -6,7 +6,7 @@ import { isRouletteWinner } from './module-roulette';
 
 
 const TRIGGER_PISS = [
-	regexPhrase(regexNamed(/(?:тут )?(русня|росня|русак|хуйло)/i)),
+	regexPhrase(regexNamed(/(?:тут )?(русня|росня|креол|русак|хуйло)/i)),
 	regexPhrase(regexNamed(/струмінь/i)),
 	regexPhrase(regexNamed(/посци/i)),
 ];

@@ -5,6 +5,15 @@ import { regexPhrase, regexNamed } from '../utils';
 import { BotkitExtended } from '../types';
 
 
+const ROULETTE_WIN_RATE = (
+	0.2
+);
+
+
+const ROULETTE_COOLDOWN = (
+	1000 * 60 * 15 // 15 minutes
+);
+
 
 const TRIGGER_ROULETTE = [
 	regexPhrase(regexNamed(/високі ставки/i)),
@@ -15,7 +24,27 @@ const TRIGGER_ROULETTE = [
 
 
 const TRIGGER_ROULETTE_WHOIS = [
-	regexPhrase(regexNamed(/хто (не креол|переможець|українець)\??/i)),
+	regexPhrase(regexNamed(/хто (?:тут )?(не креол|переможець|українець)\??/i)),
+];
+
+
+const TRIGGER_ROULETTE_WHOAMI = [
+	regexPhrase(regexNamed(/хто я\??/i)),
+];
+
+
+const RESPONSE_ROULETTE_WHOAMI_WINNER = [
+	'Точно не креол.',
+	'Удачливий засранець.',
+	'Переможець по життю.',
+	'Справжній козак!',
+	'Пересічний українець.',
+];
+
+
+const RESPONSE_ROULETTE_WHOAMI_LOSER = [
+	'Креол йобаний.',
+	'Ти лох.',
 ];
 
 
@@ -24,16 +53,6 @@ const RESPONSE_ROULETTE_COOLDOWN = [
 	'Колода заряджається, приходь пізніше',
 	'Казино ще не готове',
 ];
-
-
-const ROULETTE_WIN_RATE = (
-	0.2
-);
-
-
-const ROULETTE_COOLDOWN = (
-	1000 * 60 * 15 // 15 minutes
-);
 
 
 export const setRouletteWinner = (controller: BotkitExtended, user: null | { name: string, id: string }) => {
@@ -60,6 +79,13 @@ export const isRouletteWinner = (controller: BotkitExtended, userId: string) => 
 
 
 export default (controller: BotkitExtended) => {
+	controller.hears(TRIGGER_ROULETTE_WHOAMI, 'message', async (bot, msg) => {
+		if (isRouletteWinner(controller, msg.user)) {
+			await bot.say(sample(RESPONSE_ROULETTE_WHOAMI_WINNER)!);
+		} else {
+			await bot.say(sample(RESPONSE_ROULETTE_WHOAMI_LOSER)!);
+		}
+	});
 	controller.hears(TRIGGER_ROULETTE_WHOIS, 'message', async (bot, msg) => {
 		const winner = getRouletteWinner(controller);
 		if (winner !== null) {
