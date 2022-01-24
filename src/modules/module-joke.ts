@@ -63,6 +63,15 @@ const RETARDED_JOKES: Array<[RegExp[], string[]]> = [
 			'Відсмокчи у тракториста.',
 		],
 	],
+	[
+		[
+			regexPhrase(/о/i),
+			regexPhrase(/шо/i),
+		],
+		[
+			'В рот зашло.',
+		],
+	],
 ];
 
 
