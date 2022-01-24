@@ -27,7 +27,7 @@ export default (controller: Botkit) => {
 			return false;
 		}
 		if (msg.text.length >= minLength) {
-			return !msg.text.match(uaLetters) && franc(msg.text, francOpts) === 'rus';
+			return msg.text.match(ruLetters) !== null || (!msg.text.match(uaLetters) && franc(msg.text, francOpts) === 'rus');
 		} else {
 			return msg.text.match(ruLetters) !== null;
 		}
