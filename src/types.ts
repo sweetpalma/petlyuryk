@@ -7,6 +7,11 @@ export interface BotkitExtended extends Botkit {
 }
 
 
+export interface MemoryGlobals {
+	[key: string]: string | number | boolean | null | undefined;
+}
+
+
 export interface MetadataMessage {
 	recipientType: 'all' | 'user' | 'bot';
 	replyToMessageId?: string;
@@ -15,5 +20,5 @@ export interface MetadataMessage {
 
 
 export interface MetadataUser {
-	[key: string]: string | number | null | undefined;
+	[key: string]: string | number | boolean | null | undefined;
 }

@@ -1,5 +1,5 @@
 import { Botkit, BotkitConversation } from 'botkit';
-import { regexPhrase, regexNamed } from '../utils';
+import { regexPhrase } from '../utils';
 
 const TRIGGER_GLORY = (
 	regexPhrase(/Слава Україні/i)
@@ -10,10 +10,6 @@ const TRIGGER_DEATH = (
 	regexPhrase(/Слава нації/i)
 );
 
-const TRIGGER_FATHER = [
-	regexPhrase(regexNamed(/хто (?:тут )?(батя|батько)/i)),
-];
-
 
 const RESPONSE_GLORY = (
 	'Героям слава!'
@@ -22,10 +18,6 @@ const RESPONSE_GLORY = (
 
 const RESPONSE_DEATH = (
 	'Смерть ворогам!'
-);
-
-const RESPONSE_FATHER = (
-	'Батько наш Бандера!'
 );
 
 
@@ -51,8 +43,5 @@ export default (controller: Botkit) => {
 	});
 	controller.hears(TRIGGER_DEATH, 'message', async (bot, msg) => {
 		await bot.say(RESPONSE_DEATH);
-	});
-	controller.hears(TRIGGER_FATHER, 'message', async (bot, msg) => {
-		await bot.say(RESPONSE_FATHER);
 	});
 };

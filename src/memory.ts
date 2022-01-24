@@ -1,6 +1,6 @@
 import { Botkit }  from 'botkit';
 import { Message } from 'node-telegram-bot-api';
-import { MetadataUser } from './types';
+import { MetadataUser, MemoryGlobals } from './types';
 import { logger } from './logger';
 
 
@@ -8,6 +8,7 @@ import { logger } from './logger';
 // Mostly message thread information.
 export class Memory {
 	public readonly storageKey = 'petlyuryk';
+	private globals: MemoryGlobals = {};
 	private metadataUser: {[key: string]: MetadataUser | undefined} = {};
 	private threads: {[key: string]: string} = {};
 
@@ -16,8 +17,11 @@ export class Memory {
 		try {
 			const storageData = await controller.storage.read([ this.storageKey ]);
 			const petlyurykStorage = storageData[this.storageKey] || {};
+
+			this.globals = petlyurykStorage.globals || {};
 			this.metadataUser = petlyurykStorage.metadataUser || {};
 			this.threads = petlyurykStorage.threads || {};
+
 			logger.info('memory:pull', { success: true, error: null });
 		} catch (error) {
 			logger.info('memory:pull', { success: true, error });
@@ -27,8 +31,8 @@ export class Memory {
 	// Load current state from a Botkit Storage.
 	public async push(controller: Botkit) {
 		try {
-			const { threads, metadataUser } = this;
-			const data = { threads, metadataUser };
+			const { threads, metadataUser, globals } = this;
+			const data = { threads, metadataUser, globals };
 			await controller.storage.write({ [this.storageKey]: data });
 			logger.info('memory:push', { success: true, error: null });
 		} catch (error) {
@@ -46,6 +50,18 @@ export class Memory {
 			this.threads[msg.message_id] = this.threads[replyToMessageId] || msg.message_id.toString();
 			return this.threads[msg.message_id];
 		}
+	}
+
+	// Get global variable:
+	public getGlobal<T extends MemoryGlobals[keyof MemoryGlobals]>(key: keyof MemoryGlobals, defaultValue: T) {
+		return this.globals[key];
+	}
+
+	// Set global variable:
+	public setGlobal<T extends MemoryGlobals[keyof MemoryGlobals]>(key: keyof MemoryGlobals, value: T) {
+		const oldValue = this.globals[key];
+		this.globals[key] = value;
+		logger.info('memory:setGlobal', { key, oldValue, newValue: value });
 	}
 
 	// Get user metadata.

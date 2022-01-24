@@ -2,6 +2,7 @@ import { sample } from 'lodash';
 import { BotkitExtended } from '../types';
 import { RESPONSE_AGRESSIVE_PISS } from '../strings';
 import { regexPhrase, regexNamed } from '../utils';
+import { isRouletteWinner } from './module-roulette';
 
 
 const TRIGGER_PISS = [
@@ -16,6 +17,13 @@ const RESPONSE_PISS = [
 ];
 
 
+const RESPONSE_PISS_IMMUNE = [
+	'Він точно не креол.',
+	'Його я не маю права чіпати.',
+	'Переможців не судять!',
+];
+
+
 const RESPONSE_PISS_NICE_TRY = [
 	'Охуєнно смішно.',
 	'Ти справді думав що це спрацює?',
@@ -26,6 +34,12 @@ const RESPONSE_PISS_NICE_TRY = [
 export default (controller: BotkitExtended) => {
 	controller.hears(TRIGGER_PISS, 'message', async (bot, msg) => {
 		const { recipientType, replyToMessageId } = controller.adapter.getMessageMetadata(msg);
+		if (isRouletteWinner(controller, msg.user)) {
+			await bot.say({
+	    	text: sample(RESPONSE_PISS_IMMUNE)!,
+	    });
+			return;
+		}
 		if (recipientType === 'bot') {
 			await bot.say({
 	    	text: sample(RESPONSE_PISS_NICE_TRY)! + ' ' + sample(RESPONSE_PISS)!,

@@ -1,6 +1,7 @@
 import franc from 'franc';
 import { sample } from 'lodash';
 import { Botkit, BotkitMessage, BotkitConversation } from 'botkit';
+import { isRouletteWinner } from './module-roulette';
 import {
 	RESPONSE_AGRESSIVE_CONTINUATION,
 	RESPONSE_AGRESSIVE_RUSSIAN,
@@ -23,6 +24,9 @@ export default (controller: Botkit) => {
 		const francOpts = { minLength, only: [ 'ukr', 'rus' ] };
 		const uaLetters = /[іїєґ]/i;
 		const ruLetters = /[ыэъё]/i;
+		if (isRouletteWinner(controller, msg.user)) {
+			return false;
+		}
 		if (!msg.text) {
 			return false;
 		}
