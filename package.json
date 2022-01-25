@@ -8,6 +8,7 @@
     "start": "npm run start:dev",
     "start:dev": "ts-node-dev -r dotenv/config ./src/index.ts --watch src",
     "docker": "docker-compose up --build --remove-orphans bot || true",
+    "deploy": "docker-compose up --build -d",
     "lint": "eslint src --ext .ts --fix"
   },
   "dependencies": {
