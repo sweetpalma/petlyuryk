@@ -44,10 +44,17 @@ export class TelegramAdapter extends BotAdapter {
 			});
 			/* eslint-disable @typescript-eslint/no-explicit-any */
 			controller.middleware.ingest.use(async (bot: any, msg: any, next: any) => {
+				// PRIVATE messages: show ABOUT and stop further processing
+				if (!msg.reference.conversation.isGroup) {
+					if (msg.text === '/start') {
+						const [ chatId ] = msg.reference?.conversation?.id.split(':');
+						this.telegram?.sendMessage(chatId, ABOUT);
+					}
+					next(); // no await is intentional
+					return;
+				}
+				// GROUP messages:
 				if (msg.reference.conversation.properties.recipientType === 'bot') {
-					// send ABOUT in private messages and stop further processing
-					const [ chatId ] = msg.reference?.conversation?.id.split(':');
-					this.telegram?.sendMessage(chatId, ABOUT);
 					next(); // no await is intentional
 					return;
 				}
@@ -191,7 +198,7 @@ export class TelegramAdapter extends BotAdapter {
 			conversation: {
 				id: msg.chat.id.toString() + ':' + this.memory.addMessageToThread(msg),
 				name: msg.chat.title || msg.chat.id.toString(),
-				isGroup: (msg.chat.type === 'group'),
+				isGroup: (msg.chat.type !== 'private'),
 				conversationType: msg.chat.type,
 				properties: metadata,
 			},
