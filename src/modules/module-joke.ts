@@ -57,7 +57,7 @@ const RETARDED_JOKES: Array<[RegExp[], string[]]> = [
 	[
 		[
 			regexPhrase(/триста$/i),
-			regexPhrase(/300/i),
+			regexPhrase(/300$/i),
 		],
 		[
 			'Відсмокчи у тракториста.',
@@ -65,8 +65,8 @@ const RETARDED_JOKES: Array<[RegExp[], string[]]> = [
 	],
 	[
 		[
-			regexPhrase(/о/i),
-			regexPhrase(/шо/i),
+			regexPhrase(/о$/i),
+			regexPhrase(/шо$/i),
 		],
 		[
 			'В рот зашло.',
