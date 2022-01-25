@@ -11,7 +11,7 @@ const ROULETTE_WIN_RATE = (
 
 
 const ROULETTE_COOLDOWN = (
-	1000 * 60 * 15 // 15 minutes
+	1000 * 60 * 60 // 60 minutes
 );
 
 
