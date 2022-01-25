@@ -7,6 +7,7 @@ import {
 	RESPONSE_AGRESSIVE,
 	RESPONSE_AGRESSIVE_CONTINUATION,
 	RESPONSE_AGRESSIVE_FINALE,
+	ABOUT,
 } from '../strings';
 
 
@@ -51,19 +52,6 @@ const RESPONSE_THANKS = [
 ];
 
 
-const RESPONSE_ABOUT = `
-Я - Петлюрик, перший в світі бот-русофоб. Просто додай мене в групу і я буду робити наступне:
-
-• Визначати російську мову та нещадно карати за неї.
-• Аналізувати  валютний ринок ("Петлюрику, як там біток?").
-• Грати в рулетку з креолами ("Петлюрику, рулетка").
-• Славити Україну ("Петлюрику, слава Україні!").
-• Нищівно критикувати ("Петлюрику, струмінь").
-
-Маєте побажання та пропозиції? Мій автор готовий вас уважно вислухати: @nekodisaster.
-`;
-
-
 const isAdressedToBot = (controller: BotkitExtended, patterns: RegExp[]) => async (msg: BotkitMessage) => {
 	const { recipientType } = controller.adapter.getMessageMetadata(msg);
 	const matchedTriggers = patterns.filter(rgx => msg.text?.match(rgx));
@@ -91,14 +79,14 @@ export default (controller: BotkitExtended) => {
 		await bot.beginDialog(DIALOG_AGRESSIVE);
 	});
 
-	controller.interrupts(TRIGGER_ABOUT, 'message', async (bot, msg) => {
-		await bot.say(RESPONSE_ABOUT);
-	});
-
 	controller.interrupts(isAdressedToBot(controller, TRIGGER_THANKS_DIALOG), 'message', async (bot, msg) => {
 		await bot.say(sample(RESPONSE_THANKS)!);
 	});
 	controller.interrupts(TRIGGER_THANKS_GENERAL, 'message', async (bot, msg) => {
 		await bot.say(sample(RESPONSE_THANKS)!);
+	});
+
+	controller.interrupts(TRIGGER_ABOUT, 'message', async (bot, msg) => {
+		await bot.say(ABOUT);
 	});
 };

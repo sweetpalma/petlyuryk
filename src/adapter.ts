@@ -4,6 +4,7 @@ import TelegramBot, { Message, User } from 'node-telegram-bot-api';
 import { MetadataMessage } from './types';
 import { Memory } from './memory';
 import { logger } from './logger';
+import { ABOUT } from './strings';
 
 
 export class TelegramAdapter extends BotAdapter {
@@ -44,8 +45,10 @@ export class TelegramAdapter extends BotAdapter {
 			/* eslint-disable @typescript-eslint/no-explicit-any */
 			controller.middleware.ingest.use(async (bot: any, msg: any, next: any) => {
 				if (msg.reference.conversation.properties.recipientType === 'bot') {
-					// intentional no await
-					next();
+					// send ABOUT in private messages and stop further processing
+					const [ chatId ] = msg.reference?.conversation?.id.split(':');
+					this.telegram?.sendMessage(chatId, ABOUT);
+					next(); // no await is intentional
 					return;
 				}
 				const triggersOfType = [
@@ -55,8 +58,7 @@ export class TelegramAdapter extends BotAdapter {
 				for (const trigger of triggersOfType) {
 					const triggerIsAcceptable = await (controller as any).testTrigger(trigger, msg);
 					if (triggerIsAcceptable) {
-						// intentional no await
-						next();
+						next(); // no await is intentional
 						break;
 					}
 				}
