@@ -5,12 +5,13 @@ import { regexPhrase, regexNamed } from '../utils';
 
 
 const TRIGGER_CURRENCY = [
+	regexPhrase(regexNamed(/(скільки|кіко) коштує (?<code>[a-zа-яіїє ]+)\??$/i)),
 	regexPhrase(regexNamed(/(що|як) там (?<code>[a-zа-яіїє ]+)\??$/i)),
 ];
 
 
 const TRIGGER_CURRENCY_MARKET = [
-	regexPhrase(regexNamed(/(що|як) там ринок/i)),
+	regexPhrase(regexNamed(/(що|як) там (ринок|с?риночок)/i)),
 ];
 
 
