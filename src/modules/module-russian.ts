@@ -33,8 +33,8 @@ export default (controller: Botkit) => {
 		}
 		if (text.length >= minLength) {
 			const rates = franc.all(text, francOpts);
-			const [ _codeUa, rateUa ] = rates.find(([ code ]) => code === 'ukr')!;
-			const [ _codeRu, rateRu ] = rates.find(([ code ]) => code === 'rus')!;
+			const [ _codeUa, rateUa ] = rates.find(([ code ]) => code === 'ukr') || [ 'ukr', 0 ];
+			const [ _codeRu, rateRu ] = rates.find(([ code ]) => code === 'rus') || [ 'rus', 0 ];
 			const isRussian = text.match(ruLetters) !== null || (!text.match(uaLetters) && rateRu > 0.99 && rateUa < 0.9);
 			if (isRussian) logger.info('russian:franc', { text, rateUa, rateRu, isRussian });
 			return isRussian;
