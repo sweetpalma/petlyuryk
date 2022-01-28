@@ -5,13 +5,24 @@
   "license": "MIT",
   "description": "Russophobic Telegram bot.",
   "scripts": {
+  	"prepare": "husky install",
     "start": "npm run start:dev",
-    "start:dev": "ts-node-dev -r dotenv/config ./src/index.ts --watch src",
+    "start:dev": "nodemon -r dotenv/config ./src/index.ts",
     "docker": "docker-compose up --build --remove-orphans bot || true",
     "deploy": "docker-compose up --build -d",
-    "lint": "eslint src --ext .ts --fix"
+    "lint": "eslint src --ext .ts --fix",
+    "test": "jest --verbose"
   },
   "dependencies": {
+    "@nlpjs/basic": "^4.22.14",
+    "@nlpjs/core": "^4.22.7",
+    "@nlpjs/directline-connector": "^4.22.12",
+    "@nlpjs/express-api-server": "^4.22.14",
+    "@nlpjs/lang-ru": "^4.22.7",
+    "@nlpjs/lang-uk": "^4.22.7",
+    "@nlpjs/language": "^4.22.7",
+    "@nlpjs/nlp": "^4.22.9",
+    "@nlpjs/sentiment": "^4.22.7",
     "axios": "^0.25.0",
     "botbuilder": "^4.14.1",
     "botbuilder-adapter-web": "^1.0.9",
@@ -19,13 +30,17 @@
     "botkit": "4.10.0",
     "botkit-storage-mongo": "^1.0.7",
     "botkit-storage-redis": "^1.1.0",
+    "dedent": "^0.7.0",
     "dotenv": "^10.0.0",
     "franc": "^5.0.0",
     "lodash": "^4.17.21",
     "mongodb": "^4.1.2",
+    "node-nlp": "^4.22.14",
     "node-telegram-bot-api": "^0.54.0",
+    "nodemon": "^2.0.15",
     "redis": "^3.1.2",
-    "ts-node": "^10.2.1",
+    "rss-parser": "^3.12.0",
+    "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.2",
     "winston": "^3.3.3"
@@ -33,14 +48,26 @@
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/bluebird": "^3.5.36",
+    "@types/dedent": "^0.7.0",
     "@types/express": "^4.17.13",
     "@types/franc": "^5.0.1",
+    "@types/jest": "^27.4.0",
     "@types/lodash": "^4.14.172",
     "@types/node-telegram-bot-api": "^0.51.4",
     "@types/redis": "^2.8.31",
     "@types/string-format": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
-    "eslint": "^8.7.0"
+    "eslint": "^8.7.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/jest.ts"
+    ],
+    "testEnvironment": "node"
   }
 }

@@ -8,11 +8,11 @@ data/
 # Build results:
 dist/
 
-# Old sources:
-src_old/
-
 # MacOS shit:
 .DS_Store
 
 # Environment data:
 .env
+
+# Logs:
+logs/
