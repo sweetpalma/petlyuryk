@@ -1,0 +1,95 @@
+<!doctype html>
+<head>
+	<title>Петлюрик</title>
+	<link rel="stylesheet" href="/style.css"/>
+	<link rel="icon" type="image/png" href="/favicon.png"/>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+	<script src="https://cdn.jsdelivr.net/npm/debounce@1.2.1/index.min.js"></script>
+	<script src="/script.js"></script>
+</head>
+<body>
+	<div id="app">
+		<header class="header">
+			<div class="header__inner container">
+				<img src="/favicon.png"/>
+				<strong>Петлюрик</strong>
+				<a
+					href="#"
+					v-for="(pageObject, name) in pages" 
+					v-bind:class="['header__item', {'header__item--active': page && pageObject.title == page.title}]"
+					v-on:click="(event) => {
+						event.preventDefault();
+						setPage(name);
+					}"
+				>
+					{{ pageObject.title }}
+				</a>
+				<div style="margin: 0 auto"></div>
+				<a href="https://savelife.in.ua" class="header__item" target="_blank">
+					Donate
+				</a>
+				<a href="https://github.com/sweetpalma/petlyuryk" class="header__item" target="_blank">
+					GitHub
+				</a>
+			</div>
+		</header>
+		<main class="main container">
+
+			<!-- Section: Loading -->
+			<div v-if="loading">
+				Завантаження...
+			</div>
+
+			<!-- Page Type: Stats -->
+			<div v-else-if="page && page.type === 'stats'" class="stats">
+				<div v-for="stat in data.items" class="stats__item">
+					<div class="stats__title">{{ stat.title }}</div> 
+					<div class="stats__value">{{ stat.value }}</div>
+				</div>
+			</div>
+
+			<!-- Page Type: Table -->
+			<div v-else-if="page && page.type === 'table'" class="table">
+				<div class="table__header">
+					<span class="table__info">
+						<strong>Всього документів:</strong>
+						<span style="margin-left: 8px">{{ data.total }}</span>
+						<input type="text" v-model="dataSearch"/>
+					</span>
+					<span>
+						<strong>Сторінка:</strong> {{ dataOffset / dataLimit + 1 }}
+					</span>
+					<button v-on:click="dataOffset -= dataLimit" v-bind:disabled="dataOffset == 0">
+						Попередня
+					</button>
+					<button v-on:click="dataOffset += dataLimit" v-bind:disabled="data.items.length < dataLimit">
+						Наступна
+					</button>
+				</div>
+				<table>
+					<tr>
+						<th v-for="field in data.schema" v-bind:width="field.width">
+							{{ field.title }}
+						</th>
+					</tr>
+					<tr v-for="item in data.items">
+						<td v-for="field in item">
+							{{ field.value }}
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Page Type: Not found -->
+			<div v-else>
+				<span>Сторінку не знайдено.</span>
+			</div>
+
+		</main>
+		<footer class="footer">
+			<div class="footer__inner container">
+				<a href="https://github.com/sweetpalma/petlyuryk" target="_blank">Петлюрик</a> від <a href="https://github.com/sweetpalma/petlyuryk"target="_blank">SweetPalma</a>.
+			</div>
+		</footer>
+	</div>
+</body>

@@ -1,73 +1,143 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
+/* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
 const { dockStart } = require('@nlpjs/basic');
-import { sample } from 'lodash';
 import { readdirSync } from 'fs';
 import { join } from 'path';
+import { Controller, ControllerRequest } from '../controller';
+import { logger } from '../logger';
+import { languageGuess } from './language';
+import { TRIGGER } from '../regexp';
 
 
-import RuInsults from '../knowledge/ua-insults.json';
-import UaResponseDunno from '../knowledge/ua-response-dunno.json';
-import { Controller } from '../controller';
-// import { logger } from '../logger';
+/**
+ * Neural network threshold.
+ */
+export const NEURAL_THRESHOLD = (
+	0.7
+);
 
 
+/**
+ * Typed wrapper around NLP.JS corpus structure, augmented with intent handler map.
+ */
+export interface NeuralModule {
+	name: string;
+	locale: string;
+	data: Array<{
+		intent: string;
+		utterances: Array<string>;
+		answers: Array<string>;
+	}>;
+	handlers?: {
+		[key: string]: Array<NeuralHandler>;
+	};
+	contextData?: {
+		[key: string]: {
+			[option: string]: string | number | boolean;
+		}
+	};
+	entities?: {
+		[key: string]: string | {
+			options: {
+				[option: string]: Array<string>;
+			}
+		}
+	};
+}
+
+
+/**
+ * Typed wrapper around NLP.JS response structure.
+ */
+export interface NeuralResponse {
+	text: string;
+	answer: string;
+	locale: string;
+	intent: string;
+	score: number;
+	from: {
+		firstName?: string;
+		lastName?: string;
+		userName?: string;
+		userId: string;
+	};
+	classifications: Array<{
+		intent: string;
+		score: number;
+	}>;
+	entities: Array<{
+		option: string;
+		accuracy: number;
+		entity: string;
+	}>;
+	activity: {
+		conversation: {
+			id: string;
+			sourceEvent: ControllerRequest;
+			replyTo: string;
+		};
+	};
+}
+
+/**
+ * Typed NLP.JS intent handler.
+ */
+export interface NeuralHandler {
+	(_nlp: unknown, response: NeuralResponse): void | Promise<void>;
+}
+
+
+/**
+ * Typed NLP.JS language guessing result.
+ */
+export interface NeuralLanguage {
+	language: string;
+	alpha3: string;
+	alpha2: string;
+	score: number;
+}
+
+
+/**
+ * Typed neural submodule helper.
+ */
+export const neuralModule = (submodule: NeuralModule) => (
+	submodule
+);
+
+
+/**
+ * Petlyuryk neural processor module.
+ */
 export default async (controller: Controller) => {
 
-	// Load NLP.JS basic container:
+	// Prepare basic NLP.JS container:
 	const container = await dockStart({
 		use: [ 'Basic', 'LangUk', 'LangRu' ],
 		settings: {
 			nlp: {
-				log: false,
-	    	threshold: 0.7,
+	    	threshold: NEURAL_THRESHOLD,
+	    	trainByDomain: false,
 	    	autoLoad: false,
 	    	autoSave: false,
 	    	forceNER: true,
 			},
-			'console': {
-      	'debug': false,
-    	},
 		},
 	});
 
-	// Prepare NLP and Language modules and load modules:
-	const language = container.get('Language');
+	// Extract NLP module from container:
 	const nlp = container.get('nlp');
 
-	// Prepare intent handler list and load modules:
-	const handlers: {[key: string]: undefined | Array<PetlyurykNeuralHandler>} = {};
-	const moduleList = readdirSync(join(__dirname, 'modules'));
-	for (const moduleFileName of moduleList) {
+	// Extract custom language guesser:
+	const guess = languageGuess(container);
 
-		// Prepare module:
-		const moduleFilePath = join(__dirname, 'modules', moduleFileName);
-		const module = require(moduleFilePath);
-
-		// Load corpus:
-		if (module.corpus) {
-			await nlp.addCorpus(module.corpus);
-		}
-
-		// Load intent handlers:
-		if (module.handlers as PetlyurykNeuralHandlerMap) {
-			Object.keys(module.handlers).map(intent => {
-				handlers[intent] = [ ...(handlers[intent] || []), ...module.handlers[intent] ];
-			});
-		}
-
-	}
-
-	// Train model:
-	/* eslint-disable no-console, @typescript-eslint/no-empty-function */
-	const consoleLog = console.log;
-	console.log = () => {};
-	await nlp.train();
-	console.log = consoleLog;
-	/* eslint-enable no-console, @typescript-eslint/no-empty-function */
-
-	// Setup handler: Intent handlers:
-	nlp.onIntent = async (_nlp: typeof nlp, response: PetlyurykNeuralResponse) => {
-		const intentHandlers = handlers[response.intent];
+	// Prepare unified intent handler:
+	const neuralHandlers: NeuralModule['handlers'] = {};
+	nlp.onIntent = async (_nlp: typeof nlp, response: NeuralResponse) => {
+		const intentHandlers = neuralHandlers[response.intent];
 		if (intentHandlers) {
 			for (const handler of intentHandlers) {
 				await handler(_nlp, response);
@@ -75,84 +145,105 @@ export default async (controller: Controller) => {
 		}
 	};
 
-	// Setup handler: Incoming messages:
-	controller.on('messageIn', async (event, stop) => {
+	// Load neural sub-modules:
+	const moduleList = readdirSync(join(__dirname, 'modules'));
+	for (const moduleFileName of moduleList) {
+		try {
+
+			// Prepare loading information:
+			const moduleFilePath = join(__dirname, 'modules', moduleFileName);
+			const [ moduleName ] = moduleFileName.split('.');
+			logger.info('neural:load', { moduleName });
+
+			// Evaluate module and extract NLP.JS corpus and intent handler information:
+			const { handlers, ...corpus } = require(moduleFilePath).default as NeuralModule;
+
+			// Load NLP.JS corpus:
+			await nlp.addCorpus(corpus);
+
+			// Load optional intent handlers:
+			if (handlers) {
+				Object.keys(handlers).map(intent => {
+					neuralHandlers[intent] = [
+						...(neuralHandlers[intent] || []),
+						...handlers[intent],
+					];
+				});
+			}
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			logger.error('neural:load', {
+				error: error.message || error.toString(),
+				stack: error.stack?.split('\n').map((t: string) => t.trim()),
+			});
+		}
+	}
+
+	// Train neural model.
+	// Console is disable with monkey patching because there is literally no other way to do this.
+	const startDate = new Date();
+	const consoleLog = console.log;
+	console.log = () => {};
+	await nlp.train();
+	console.log = consoleLog;
+	logger.info('neural:train', {
+		startDate,
+		endDate: new Date(),
+	});
+
+	// Build up the final controller handler:
+	logger.info('neural:ready');
+	controller.addHandler(async (request) => {
 
 		// Match message to the personal trigger:
-		const { text } = event;
-		const personalTrigger = /(^|\s)Петлюрику?,?($|\s|\.|,|!)/i;
-		const isReferencedByName = text.match(personalTrigger);
+		const { text } = request;
+		const textWithoutTrigger = text.replace(TRIGGER, '').trim();
+		const isReferencedByName = text !== textWithoutTrigger;
 
 		// Guess language before processing message:
-		type LanguageResult = { alpha3: string, alpha2: string, language: string, score: number };
-		const guessList = language.guess(event.text, [ 'uk', 'ru', 'en' ]) as LanguageResult[];
-		const scoreRu = guessList.find(guess => guess.alpha2 === 'ru')?.score || 0;
-		const scoreUa = guessList.find(guess => guess.alpha2 === 'uk')?.score || 0;
-		const locale = guessList[0].alpha2;
+		const { locale, guessed } = guess(textWithoutTrigger);
 
-		// Skip message if it is in Ukrainian and is not addressed to the bot.
-		// This helps to lower workload on the neural engine:
-		if (locale !== 'ru' && !isReferencedByName && !event.replyTo?.bot && !event.private) {
+		// Skip message if it is in Ukrainian and is not addressed to the bot:
+		if (locale !== 'ru' && !isReferencedByName && !request.replyTo?.isAdressedToBot && request.chat.isGroup) {
 			return;
 		}
 
-		// Prepare input message by adding some context to it:
+		// Prepare NLP.JS input:
 		const input = {
-			text: text.replace(personalTrigger, ''),
-			from: event.from,
+			locale: guessed ? undefined : locale,
+			text: textWithoutTrigger,
+			from: request.user,
 			activity: {
 				conversation: {
-					id: `${event.chat.chatId}:${event.from.userId}`,
-					sourceEvent: event,
-					replyTo: event.id,
+					id: `${request.chat.id}:${request.user.id}`,
+					sourceEvent: request,
+					replyTo: request.id,
 				},
 			},
 		};
 
-		// Trigger hostile reaction if message is in russian and is not a reply:
-		if (locale === 'ru' && !event.replyTo && !event.private) {
-			input.text = RuInsults[0];
-		}
-
-		// Build NLP response using input:
-		const response = await nlp.process(input) as PetlyurykNeuralResponse;
-		// const context = await ctxManager.getContext(input);
-		if (!response.answer || response.answer.length === 0) {
-			response.answer = sample(UaResponseDunno)!;
-		}
-
-		// Send response message:
-		controller.trigger({
-			type: 'messageOut',
-			intent: `neural.${response.locale}.${response.intent}`.toLowerCase(),
-			text: response.answer,
-			sourceText: event.text,
-			chat: {
-				chatId: event.chat.chatId,
-			},
-			replyTo: {
-				messageId: response.activity.conversation.replyTo,
-			},
-			metadata: {
-				language: {
-					locale,
-					scoreUa,
-					scoreRu,
-				},
-				response: {
-					text: response.text,
-					answer: response.answer,
-					score: response.score,
-					locale: response.locale,
-					from: response.from,
-					intent: response.intent,
-					classifications: response.classifications.filter(c => c.score > 0),
-					entities: response.entities,
-				},
-			},
+		// Run NLP.JS processor and stop if no answer:
+		const response: NeuralResponse = await nlp.process(input);
+		logger.info('neural:response', {
+			locale: response.locale,
+			intent: response.intent,
+			text: response.text,
+			answer: response.answer || null,
+			score: response.score,
+			from: response.from,
+			classifications: response.classifications.filter(c => c.score > 0),
+			entities: response.entities,
 		});
-		stop();
-		return;
+
+		// Pack a response:
+		if (response.answer) {
+			return {
+				intent: `neural.${response.locale}.${response.intent}`.toLowerCase(),
+				replyTo: { messageId: response.activity.conversation.replyTo },
+				text: response.answer,
+			};
+		}
 
 	});
 

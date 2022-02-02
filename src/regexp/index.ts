@@ -1,14 +1,43 @@
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
 import { sample } from 'lodash';
+import UaResponseHostileShort from '../data/responses/ua-hostile-short.json';
 import { Controller } from '../controller';
+import { logger } from '../logger';
+import * as rgx from './utils';
 
 
-const replies = [
+/**
+ * RegExp reply structure.
+ */
+type Reply = {
+	intent: string;
+	triggers: Array<RegExp>;
+	responses: Array<string>;
+};
+
+
+/**
+ * RegExp reply database.
+ */
+const replies: Array<Reply> = [
 
 	// Glory to Ukraine:
 	{
+		intent: 'glory.capitalize',
+		triggers: [
+			rgx.matchPart(/україна/), // case sensitive
+		],
+		responses: [
+			'Україна пишеться з великої букви, синку.',
+		],
+	},
+	{
 		intent: 'glory.ukraine',
 		triggers: [
-			/(^|\s)Слава Україні(\.|\?|!)?$/i,
+			rgx.matchEnd(/Слава Україні/i),
 		],
 		responses: [
 			'Героям Слава!',
@@ -17,7 +46,7 @@ const replies = [
 	{
 		intent: 'glory.nation',
 		triggers: [
-			/(^|\s)Слава Нації(\.|\?|!)?$/i,
+			rgx.matchEnd(/Слава Нації/i),
 		],
 		responses: [
 			'Смерть ворогам!',
@@ -26,44 +55,94 @@ const replies = [
 	{
 		intent: 'glory.over',
 		triggers: [
-			/(^|\s)Україна(\.|\?|!)?$/i,
+			rgx.matchFull(/Україна/i),
 		],
 		responses: [
 			'Понад усе!',
 		],
 	},
 
+	// Bandera:
+	{
+		intent: 'bandera.father',
+		triggers: [
+			rgx.matchFull(/батько наш - бандера/i),
+			rgx.matchFull(/батько наш бандера/i),
+		],
+		responses: [
+			'Україна - мати!',
+		],
+	},
+	{
+		intent: 'bandera.fight',
+		triggers: [
+			rgx.matchFull(/ми за україну/i),
+		],
+		responses: [
+			'Будем воювати.',
+		],
+	},
+
+	// Belarus:
+	{
+		intent: 'live.belarus',
+		triggers: [
+			rgx.matchPart(/Жыве Беларусь/i),
+			rgx.matchPart(/Живе Білорусь/i),
+		],
+		responses: [
+			'Ще не вмерла.',
+		],
+	},
+
+	// Insult:
+	{
+		intent: 'huyryk',
+		triggers: [
+			rgx.matchPart(/(Хуюрику?),?/i),
+		],
+		responses: [
+			...UaResponseHostileShort,
+		],
+	},
+
 	// Putin:
 	{
-		intent: 'putin',
+		intent: 'putin.short',
 		triggers: [
-			/(^|\s)(Путін|Путин)(\.|\?|!)?$/i,
+			rgx.matchFull(/(путин|путін)/i),
+		],
+		responses: [
+			'Хуйло!',
+		],
+	},
+	{
+		intent: 'putin.long',
+		triggers: [
+			rgx.matchPart(/(путин|путін)/i),
 		],
 		responses: [
 			'Путін - хуйло.',
 		],
 	},
 
-	// Laugh:
+	// Retarded jokes:
 	{
-		intent: 'laugh',
+		intent: 'joke.a',
 		triggers: [
-			/(^|\s)([ахїі]{4,})(\s|\.|\?|!|$)/i,
+			rgx.matchFull(/а/i),
 		],
 		responses: [
-			'Єбать ти смішний.',
-			'Зараз лусну від сміху.',
-			'Ніхуя ти клоун.',
+			'Хуй на',
 		],
 	},
-
-	// Retarded jokes:
 	{
 		intent: 'joke.da',
 		triggers: [
-			/(^|\s)да(!|\?|.)?$/i,
+			rgx.matchEnd(/да/i),
 		],
 		responses: [
+			'Підора єда',
 			'Хуй на',
 			'Пізда',
 		],
@@ -71,7 +150,7 @@ const replies = [
 	{
 		intent: 'joke.ni',
 		triggers: [
-			/(^|\s)ні(!|\?|.)?$/i,
+			rgx.matchEnd(/ні/i),
 		],
 		responses: [
 			'Рука в гавні.',
@@ -82,50 +161,62 @@ const replies = [
 	{
 		intent: 'joke.ne',
 		triggers: [
-			/(^|\s)нє(!|\?|.)?$/i,
+			rgx.matchEnd(/нє/i),
 		],
 		responses: [
 			'Рука в гавнє.',
 		],
 	},
 	{
+		intent: 'joke.net',
+		triggers: [
+			rgx.matchEnd(/(нєт|нет)/i),
+		],
+		responses: [
+			'Підора атвєт.',
+		],
+	},
+	{
 		intent: 'joke.sho',
 		triggers: [
-			/(^|\s)шо(!|\?|.)?$/i,
+			rgx.matchEnd(/(капшо|шо)/i),
 		],
 		responses: [
 			'В рот зайшло.',
 		],
 	},
 
+
 ];
 
 
+/**
+ * Petlyuryk RegExp utilities.
+ */
+export * from './utils';
+
+
+/**
+ * Petlyuryk RegExp processor module.
+ */
 export default async (controller: Controller) => {
-	controller.on('messageIn', async (event, stop) => {
-		const { text } = event;
+	logger.info('regexp:ready');
+	controller.addHandler(async (request) => {
+		const { id } = request;
+		const text = request.text.replace(rgx.TRIGGER, '').trim();
 		for (const reply of replies) {
 			for (const trigger of reply.triggers) {
 				if (!text.match(trigger)) {
 					continue;
 				}
-				controller.trigger({
-					type: 'messageOut',
+				const randomResponse = sample(reply.responses);
+				return (!randomResponse) ? undefined : {
 					intent: `regexp.${reply.intent}`,
-					text: sample(reply.responses)!,
-					sourceText: event.text,
-					chat: {
-						chatId: event.chat.chatId,
-					},
+					text: randomResponse,
 					replyTo: {
-						messageId: event.id,
+						messageId: id,
 					},
-					metadata: {
-						trigger: trigger.toString(),
-					},
-				});
-				stop();
-				return;
+				};
 			}
 		}
 	});

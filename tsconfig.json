@@ -3,6 +3,8 @@
   "ts-node": {"files": true},
   "compilerOptions": {
   	"typeRoots": ["./node_modules/@types", "./src"],
+  	"exactOptionalPropertyTypes": true,
+  	"noImplicitOverride": true,
   	"resolveJsonModule": true
   },
 }

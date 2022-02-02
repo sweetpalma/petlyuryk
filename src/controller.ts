@@ -1,70 +1,122 @@
-export type ControllerEvent = (
-	PetlyurykMessageIn | PetlyurykMessageOut
-);
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
 
 
-export type ControllerEventNarrow<T, N> = (
-	T extends { type: N } ? T : never
-);
+/**
+ * Generic chat information.
+ */
+export interface ControllerChat {
+	id: string;
+	title?: Optional<string>;
+	isGroup: boolean;
+}
 
 
-export type ControllerHandler<T extends ControllerEvent = ControllerEvent> = {
-	(event: T, stopProcessing: () => void): void | Promise<void>;
-};
+/**
+ * Generic user information.
+ */
+export interface ControllerUser {
+	id: string;
+	username?: Optional<string>;
+	firstName?: Optional<string>;
+	lastName?: Optional<string>;
+}
 
 
+/**
+ * Generic controller request.
+ */
+export interface ControllerRequest {
+	id: string;
+	chat: ControllerChat;
+	user: ControllerUser;
+	text: string;
+	replyTo?: Optional<{
+		isAdressedToBot: boolean;
+		messageText: string;
+		messageId: string;
+	}>;
+}
+
+
+/**
+ * Generic controller response.
+ */
+export interface ControllerResponse {
+	intent: string;
+	text: string;
+	replyTo?: Optional<{
+		messageId: string;
+	}>;
+}
+
+
+/**
+ * Controller middleware handler.
+ */
+export interface ControllerHandler {
+	(req: ControllerRequest, stopProcessing: () => void): Promise<ControllerResponse | void> | ControllerResponse | void;
+}
+
+
+/**
+ * Generic middleware pipeline request processor.
+ */
 export class Controller {
-	private readonly handlers: {[key: string]: undefined | Array<ControllerHandler>} = {};
+	private handlers: Array<ControllerHandler> = [];
 
-	public on<E extends ControllerEvent, T extends E['type']>(type: T, handler: ControllerHandler<ControllerEventNarrow<E, T>>) {
-		const handlers = this.handlers[type] = this.handlers[type] || [];
-		handlers.push(handler as ControllerHandler);
+	/**
+	 * Add new controller middleware.
+	 */
+	public addHandler(handler: ControllerHandler) {
+		this.handlers.push(handler);
 	}
 
-	public async trigger(event: ControllerEvent) {
-		const handlers = this.handlers[event.type] || [];
-		for (const handler of handlers) {
-			let shouldStop = false;
-			await handler(event, () => {
-				shouldStop = true;
-			});
+	/**
+	 * Run request through middleware pipeline and get the response (or null).
+	 */
+	public async process(request: ControllerRequest) {
+		let shouldStop = false;
+		const stopProcessing = () => {
+			shouldStop = true;
+		};
+		for (const handler of this.handlers) {
+			const response = await handler(request, stopProcessing);
+			if (response) {
+				return response;
+			}
 			if (shouldStop) {
 				break;
 			}
 		}
+		// no response is found, return
+		return null;
 	}
 }
 
 
+/**
+ * Generic middleware pipeline request processor, adapted for Jest tests.
+ */
 export class ControllerTest extends Controller {
-	public lastMessageIn?: PetlyurykMessageIn;
-	public lastMessageOut?: PetlyurykMessageOut;
-
-	constructor() {
-		super();
-		this.on('messageIn', async (event) => {
-			this.lastMessageIn = event;
-		});
-		this.on('messageOut', async (event) => {
-			this.lastMessageOut = event;
-		});
-	}
-
-	async messageIn(event: Partial<PetlyurykMessageIn>) {
-		await this.trigger({
-			type: 'messageIn',
+	public override async process(request: Partial<ControllerRequest>) {
+		return super.process({
 			id: '1234567890',
 			text: 'Test Text',
-			private: false,
 			chat: {
-				chatName: 'Test Chat',
-				chatId: '1234567890',
+				id: '1234567890',
+				title: 'Test Chat',
+				isGroup: false,
 			},
-			from: {
-				userName: 'TestUser',
-				userId: '1234567890',
+			user: {
+				id: '1234567890',
+				username: 'TestUser',
+				firstName: 'Test',
+				lastName: 'User',
 			},
-			...event,
+			...request,
 		});
 	}
 }

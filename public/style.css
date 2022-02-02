@@ -1,0 +1,180 @@
+html,
+body {
+	font-family: Helvetica;
+	font-weight: 200;
+	color: #333;
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+a {
+	color: inherit;
+}
+
+strong {
+	font-weight: 400;
+}
+
+#app {
+	display: none;
+}
+
+#app.loaded {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.container {
+	width: 100%;
+	padding: 16px 16px;
+	max-width: 950px;
+	margin: 0 auto;
+}
+
+.header {
+	padding: 8px 0;
+	background: #313836;
+	color: #FFF;
+}
+
+.header__inner {
+	display: flex;
+	flex-direction: row;
+}
+
+.header__item {
+	opacity: 0.5;
+	text-decoration: none;
+	margin-left: 32px;
+}
+
+.header__item--active {
+	opacity: 1;
+}
+
+.header img {
+	border-radius: 9000px;
+	margin-right: 24px;
+	margin-top: -4px;
+	width: 24px;
+	height: 24px;
+}
+
+.main {
+	padding-top: 24px;
+	padding-bottom: 16px;
+	flex-grow: 1;
+}
+
+.footer {
+	color: #666;
+}
+
+.footer__inner {
+	padding: 24px 16px;
+}
+
+.stats {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	height: 100%;
+	margin: 0 -8px;
+}
+
+.stats__item {
+	padding: 24px;
+	background: rgba(0, 0, 0, .025);
+	border: 1px solid rgba(0, 0, 0, .15);
+	min-width: calc(50% - 16px);
+	flex-grow: 1;
+	margin: 8px;
+}
+
+.stats__title {
+	margin-bottom: 0.5em;
+}
+
+.stats__value {
+	font-size: 4em;
+}
+
+.table__header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+}
+
+.table__info {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	margin-right: 16px;
+	flex-grow: 1;
+}
+
+.table button,
+.table input {
+	outline: none;
+	appearance: none;
+	font-size: inherit;
+	background: rgba(0, 0, 0, .025);
+	border: 1px solid rgba(0, 0, 0, .15);
+	padding: 8px 16px;
+	margin: 0 0 0 16px;
+}
+
+.table input {
+	flex-grow: 1;
+}
+
+.table table {
+	width: 100%;
+	position: relative;
+	border: 1px solid rgba(0, 0, 0, .15);
+	border-collapse: collapse;
+	table-layout: fixed;
+	margin-top: 24px;
+}
+
+.table th,
+.table td {
+	border: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 16px;
+}
+
+.table th:not(:last-child),
+.table td:not(:last-child) {
+	border-right: 1px solid rgba(0, 0, 0, .075);
+}
+
+.table tr:first-child {
+	background: #FFF;
+	filter: drop-shadow(0px 3px 1px rgba(0, 0, 0, .05));
+	position: sticky;
+  top: 0; 
+}
+
+.table tr {
+	border-bottom: 1px solid rgba(0, 0, 0, .075);
+}
+
+.table tr:nth-child(even) {
+	background: rgba(0, 0, 0, .025);
+}
+
+.table th {
+	font-weight: 400;
+	text-align: left;
+}

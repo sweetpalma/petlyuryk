@@ -1,18 +1,52 @@
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
 /* eslint-disable no-console */
 import { Controller } from './controller';
-import { startTelegramBot } from './server';
-import loadRegexp from './regexp';
+import { startTelegramBot } from './bot';
+import { startServer } from './rest';
 import loadNeural from './neural';
+import loadRegexp from './regexp';
+import { Store } from './store';
 
-const token = process.env.TELEGRAM_TOKEN;
-if (!token) {
+
+// Must be provided by user.
+const { TELEGRAM_TOKEN } = process.env;
+if (!TELEGRAM_TOKEN) {
 	console.error('No TELEGRAM_TOKEN provided.');
 	process.exit(1);
 }
 
+
+// Must be provided by Docker Compose.
+const { PETLYURYK_REDIS_HOST, PETLYURYK_REDIS_PORT } = process.env;
+if (!PETLYURYK_REDIS_HOST || !PETLYURYK_REDIS_PORT) {
+	console.error('No PETLYURYK_REDIS_HOST or PETLYURYK_REDIS_PORT provided.');
+	process.exit(1);
+}
+
+
+// Must be provided by Docker Compose.
+const { PETLYURYK_STATS_PORT } = process.env;
+if (!PETLYURYK_STATS_PORT) {
+	console.error('No PETLYURYK_STATS_PORT provided.');
+	process.exit(1);
+}
+
+
+// Russian warship, go fuck yourself.
 (async () => {
-	const controller = new Controller();
-	loadRegexp(controller);
-	loadNeural(controller);
-	startTelegramBot(controller, token);
+	try {
+		const controller = new Controller();
+		await Store.connect(`redis://${PETLYURYK_REDIS_HOST}:${PETLYURYK_REDIS_PORT}`);
+		await loadRegexp(controller);
+		await loadNeural(controller);
+		await startTelegramBot(controller, TELEGRAM_TOKEN);
+		await startServer(parseInt(PETLYURYK_STATS_PORT));
+	} catch (error) {
+		console.error('Failed to launch Petlyuryk.');
+		console.error(error);
+		process.exit(1);
+	}
 })();

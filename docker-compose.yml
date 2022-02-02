@@ -1,28 +1,44 @@
 version: "3.3"
 services:
-  mongo:
-    container_name: petlyuryk-mongo
-    restart: "always"
-    image: mongo
+
+  # Petlyuryk: Redis Stack (RedisJSON, RediJSON and RedisInsight):
+  redis:
+    image: redis/redis-stack
+    container_name: petlyuryk-redis
+    restart: unless-stopped
     logging:
       driver: none
     volumes:
-      - ./data:/data/db
+      - ./data/redis:/data
+    ports:
+      - "${PETLYURYK_INSIGHT_PORT:-2206}:8001"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD
+      - REDIS_ARGS=--save 60 1
+
+  # Petlyuryk: Bot:
   bot:
     container_name: petlyuryk-bot
-    restart: "always"
+    restart: unless-stopped
     build: .
     depends_on:
-      - mongo
+      - redis
     volumes:
       - ./src:/app/src
+      - ./public:/app/public
+      - ./logs:/app/logs
+    ports:
+      - "${PETLYURYK_STATS_PORT:-2205}:${PETLYURYK_STATS_PORT:-2205}"
     environment:
+
+      # Must be provided by .env file:
       - TELEGRAM_TOKEN
-      - MONGO_INITDB_ROOT_USERNAME
-      - MONGO_INITDB_ROOT_PASSWORD
-      - OPENWEATHER_TOKEN
+
+      # Internal Docker Compose bindings:
+      - PETLYURYK_REDIS_HOST=redis
+      - PETLYURYK_REDIS_PORT=6379
+      - PETLYURYK_STATS_PORT=2205
+
+      # Node.JS variables:
+      - NODE_NO_WARNINGS=1
       - NTBA_FIX_319=1
       - NTBA_FIX_350=1

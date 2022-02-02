@@ -1,14 +1,40 @@
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
+import axios from 'axios';
+import { logger } from '../logger';
 import { ControllerTest } from '../controller';
-import UaPraises from '../knowledge/ua-praises.json';
-import UaInsults from '../knowledge/ua-insults.json';
-import RuCommon from '../knowledge/ru-common.json';
+import UaPraises from '../data/praises/ua.json';
+import UaInsults from '../data/insults/ua.json';
+import RuInsults from '../data/insults/ru.json';
+import UaCommon from '../data/common/ua.json';
+import RuCommon from '../data/common/ru.json';
 import loadNeural from '.';
 
 
+jest.mock('axios');
 let testController: ControllerTest;
 beforeAll(async () => {
+
+	// Mock Winston:
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	jest.spyOn(logger, 'info').mockImplementation(() => jest.fn() as any);
+
+	// Prepare controller:
 	testController = new ControllerTest();
 	await loadNeural(testController);
+
+	// Mock axios for API requests:
+	jest.spyOn(axios, 'get').mockImplementation(async (path: string) => {
+		if (path.startsWith('https://emapa.fra1.cdn.digitaloceanspaces.com')) {
+			return { data: { states: { a: { enabled: true }, b: { enabled: false } } } };
+		}
+		if (path.startsWith('https://api.coinbase.com')) {
+			return { data: { data: { rates: { USD: 1 } } } };
+		}
+	});
+
 });
 
 
@@ -19,88 +45,119 @@ type TestSuite = {
 };
 
 
+const testCurrencies = [
+	'uah', 'гривня',
+	'usd', 'долар', 'доллар', 'бакс',
+	'eur', 'євро',
+	'rub', 'рубль', 'рубель',
+	'btc', 'біток', 'біткоїн', 'біткоін',
+	'eth', 'етер', 'ефір',
+];
+
+
 const testCases: Array<TestSuite> = [
+	{
+		semanticGroup: 'ukrainian.none',
+		expectedIntents: [], // must ignore
+		cases: [
+			...UaCommon,
+		],
+	},
 	{
 		semanticGroup: 'russian.none',
 		expectedIntents: [ 'neural.ru.none' ],
 		cases: [
+			...RuCommon,
 			'ы',
 			'ё',
 			'ъ',
 			'э',
-			...RuCommon,
 		],
 	},
 	{
-		semanticGroup: 'personal.insult',
-		expectedIntents: [ 'neural.ru.insult', 'neural.uk.personal.insult' ],
+		semanticGroup: 'market.rate',
+		expectedIntents: [ 'neural.uk.market.rate' ],
 		cases: [
-			...UaPraises.map(word => `ти не ${word}`),
+			...testCurrencies.map(word => `кіко коштує ${word}`),
+			...testCurrencies.map(word => `скільки коштує ${word}`),
+			...testCurrencies.map(word => `що там ${word}`),
+			...testCurrencies.map(word => `як там ${word}`),
+		],
+	},
+	{
+		semanticGroup: 'alert.all',
+		expectedIntents: [ 'neural.uk.alert.all' ],
+		cases: [
+			'де тривоги',
+			'де вибухи',
+			'де сирени',
+		],
+	},
+	{
+		semanticGroup: 'insult',
+		expectedIntents: [ 'neural.ru.none', 'neural.uk.insult' ],
+		cases: [
 			...UaInsults.map(word => `ти ${word}`),
+			...RuInsults.map(word => `ты ${word}`),
 			...UaInsults.map(word => `${word}`),
+			...RuInsults.map(word => `${word}`),
 		],
 	},
 	{
-		semanticGroup: 'personal.praise',
-		expectedIntents: [ 'neural.uk.personal.praise' ],
+		semanticGroup: 'praise',
+		expectedIntents: [ 'neural.uk.praise' ],
 		cases: [
-			...UaInsults.map(word => `ти не ${word}`),
 			...UaPraises.map(word => `ти ${word}`),
 			...UaPraises.map(word => `${word}`),
 		],
 	},
 	{
-		semanticGroup: 'personal.who.you',
-		expectedIntents: [ 'neural.uk.personal.who.you' ],
+		semanticGroup: 'chatter.hello',
+		expectedIntents: [ 'neural.uk.chatter.hello' ],
 		cases: [
-			'ти бот?',
-			'хто ти такий?',
-			'ти хто?',
-			'хто ти?',
-		],
-	},
-	{
-		semanticGroup: 'personal.who.me',
-		expectedIntents: [ 'neural.uk.personal.who.me' ],
-		cases: [
-			'я хто?',
-			'хто я?',
-		],
-	},
-	{
-		semanticGroup: 'personal.hello',
-		expectedIntents: [ 'neural.uk.personal.hello' ],
-		cases: [
-			'Привіт, сонечко',
-			'Любий, привіт',
+			'Вітаю, Петлюрику',
+			'Петлюрик, здоров',
+			'Привіт',
+			'Добрий ранок',
 			'Добрий вечір',
 			'Добрий день',
-			'Вітаю, сонечко',
 		],
 	},
 	{
-		semanticGroup: 'personal.bye',
-		expectedIntents: [ 'neural.uk.personal.bye' ],
+		semanticGroup: 'chatter.bye',
+		expectedIntents: [ 'neural.uk.chatter.bye' ],
 		cases: [
-			'Бувай, квіточко',
-			'Сонечку, до побачення',
+			'Бувай, Петлюрику',
+			'До побачення',
 			'Всього доброго',
 			'Надобраніч',
+			'Добраніч',
 		],
 	},
 	{
-		semanticGroup: 'personal.thanks',
-		expectedIntents: [ 'neural.uk.personal.thanks' ],
+		semanticGroup: 'chatter.howdy',
+		expectedIntents: [ 'neural.uk.chatter.howdy' ],
+		cases: [
+			'чим займаєшся',
+			'чим зараз займаєшся',
+			'шо робиш',
+			'що робиш',
+			// 'як ти',
+			// 'шо ти',
+		],
+	},
+	{
+		semanticGroup: 'chatter.thanks',
+		expectedIntents: [ 'neural.uk.chatter.thanks' ],
 		cases: [
 			'Спасибі',
 			'Дякую, котик',
-			'Спасибі, сонечко',
 			'Дякую за поміч',
 		],
 	},
 	{
-		semanticGroup: 'personal.right',
-		expectedIntents: [ 'neural.uk.personal.right' ],
+		semanticGroup: 'chatter.right',
+		expectedIntents: [ 'neural.uk.chatter.right' ],
 		cases: [
 			'ага',
 			'згоден з тобою',
@@ -109,8 +166,8 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
-		semanticGroup: 'personal.wrong',
-		expectedIntents: [ 'neural.uk.personal.wrong' ],
+		semanticGroup: 'chatter.wrong',
+		expectedIntents: [ 'neural.uk.chatter.wrong' ],
 		cases: [
 			'ти всрався',
 			'ти обісрався',
@@ -119,8 +176,8 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
-		semanticGroup: 'personal.love',
-		expectedIntents: [ 'neural.uk.personal.love' ],
+		semanticGroup: 'chatter.love',
+		expectedIntents: [ 'neural.uk.chatter.love' ],
 		cases: [
 			'вийди за мене заміж',
 			'одружися на мені',
@@ -132,13 +189,42 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
-		semanticGroup: 'personal.status',
-		expectedIntents: [ 'neural.uk.personal.status' ],
+		semanticGroup: 'chatter.who.you',
+		expectedIntents: [ 'neural.uk.chatter.who.you' ],
 		cases: [
-			'чим займаєшся',
-			'чим зараз займаєшся',
-			'шо робиш',
-			'що робиш',
+			'ти бот?',
+			'хто ти такий?',
+			'ти хто?',
+			'хто ти?',
+		],
+	},
+	{
+		semanticGroup: 'chatter.who.me',
+		expectedIntents: [ 'neural.uk.chatter.who.me' ],
+		cases: [
+			'я хто?',
+			'хто я?',
+		],
+	},
+	{
+		semanticGroup: 'chatter.who.creator',
+		expectedIntents: [ 'neural.uk.chatter.who.creator' ],
+		cases: [
+			'хто тебе написав',
+			'хто тебе розробив',
+			'хто тебе створив',
+			'хто твій автор',
+		],
+	},
+	{
+		semanticGroup: 'chatter.capabilities',
+		expectedIntents: [ 'neural.uk.chatter.capabilities' ],
+		cases: [
+			'петлюрику, на що ти здатен?',
+			'що вмієш?',
+			'шо вмієш?',
+			'що можеш?',
+			'шо можеш?',
 		],
 	},
 ];
@@ -146,7 +232,32 @@ const testCases: Array<TestSuite> = [
 
 describe.each(testCases)('Neural - Semantic Group "$semanticGroup"', ({ cases, expectedIntents }) => {
 	test.each(cases)('react to "%s"', async (text) => {
-		await testController.messageIn({ text, private: true });
-		expect(expectedIntents).toContain(testController.lastMessageOut?.intent);
+		const response = await testController.process({ text });
+		if (expectedIntents.length > 0) {
+			expect(expectedIntents).toContain(response?.intent);
+		} else {
+			expect(response?.intent).toBeUndefined();
+		}
+	});
+});
+
+
+describe('Neural - Language Guesser', () => {
+	const repeats = [ 'ОООООО', 'АААААААААА', 'ІІІІІІІ' ];
+	test.each(repeats)('ignores repeat "%s"', async (text) => {
+		const response = await testController.process({ text });
+		expect(response?.intent).toBeUndefined();
+	});
+
+	const smiles = [ ':з', ':3', ':Р', ':с', ':(' ];
+	test.each(smiles)('ignores smile "%s"', async (text) => {
+		const response = await testController.process({ text });
+		expect(response?.intent).toBeUndefined();
+	});
+
+	const laughs = [ 'ахахахахах', 'хахахахах', 'хехе', 'хіхіхіхіхіхіхі', 'ахпхпхпхпхпх' ];
+	test.each(laughs)('ignores laugh "%s"', async (text) => {
+		const response = await testController.process({ text });
+		expect(response?.intent).toBeUndefined();
 	});
 });

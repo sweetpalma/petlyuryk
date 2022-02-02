@@ -3,7 +3,10 @@ node_modules/
 npm-debug.log
 
 # MongoDB data:
-data/
+/data/
+
+# Logs:
+/logs/
 
 # Build results:
 dist/
