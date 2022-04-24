@@ -12,9 +12,9 @@ import { Store } from './store';
 
 
 // Must be provided by user.
-const { TELEGRAM_TOKEN } = process.env;
-if (!TELEGRAM_TOKEN) {
-	console.error('No TELEGRAM_TOKEN provided.');
+const { PETLYURYK_TELEGRAM_TOKEN } = process.env;
+if (!PETLYURYK_TELEGRAM_TOKEN) {
+	console.error('No PETLYURYK_TELEGRAM_TOKEN provided.');
 	process.exit(1);
 }
 
@@ -42,7 +42,7 @@ if (!PETLYURYK_STATS_PORT) {
 		await Store.connect(`redis://${PETLYURYK_REDIS_HOST}:${PETLYURYK_REDIS_PORT}`);
 		await loadRegexp(controller);
 		await loadNeural(controller);
-		await startTelegramBot(controller, TELEGRAM_TOKEN);
+		await startTelegramBot(controller, PETLYURYK_TELEGRAM_TOKEN);
 		await startServer(parseInt(PETLYURYK_STATS_PORT));
 	} catch (error) {
 		console.error('Failed to launch Petlyuryk.');

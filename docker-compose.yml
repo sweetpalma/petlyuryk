@@ -31,7 +31,7 @@ services:
     environment:
 
       # Must be provided by .env file:
-      - TELEGRAM_TOKEN
+      - PETLYURYK_TELEGRAM_TOKEN
 
       # Internal Docker Compose bindings:
       - PETLYURYK_REDIS_HOST=redis
