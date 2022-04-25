@@ -5,7 +5,7 @@
 import { RedisStore, RedisStoreDocument } from './redis';
 
 
-export interface StoreChatInfo extends RedisStoreDocument {
+export interface StoreChatDocument extends RedisStoreDocument {
 	createdAt: Date;
 	updatedAt: Date;
 	messagesResponded: number;
@@ -18,7 +18,7 @@ export interface StoreChatInfo extends RedisStoreDocument {
 }
 
 
-export class StoreChat extends RedisStore<StoreChatInfo> {
+export class StoreChat extends RedisStore<StoreChatDocument> {
 	public readonly domain = 'petlyuryk:chat';
 	public override readonly index = {
 		id:                <const>'TAG',

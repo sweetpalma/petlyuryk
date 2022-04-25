@@ -16,37 +16,28 @@ const store = (
 
 
 /**
- * Restful Chat statistics provider.
+ * Restful Message statistics provider.
  */
-export const routerChat = (
+export const routerMessage = (
 	Router()
 );
 
 
 /**
- * GET Query chat list.
+ * GET Query message list.
  */
-routerChat.get('/', async (req, res) => {
+routerMessage.get('/', async (req, res) => {
 	const { search, offset, limit } = parseQuery(req);
-	const [ total, ...docs ] = await store.chat.search(search ? `"${search}"` : '*', offset, limit);
+	const [ total, ...docs ] = await store.message.search(search ? `"${search}"` : '*', offset, limit);
 	res.json({ data: { total, docs } });
 });
 
 
 /**
- * GET Chat stats like messages processed.
+ * GET Message information by ID.
  */
-routerChat.get('/stats', async (req, res) => {
-	const data = await store.chat.stats();
-	res.json({ data });
-});
-
-
-/**
- * GET Chat information by ID.
- */
-routerChat.get('/:id', async (req, res) => {
+routerMessage.get('/:id', async (req, res) => {
 	const { id } = req.params;
-	const info = await store.chat.read(id);
+	const info = await store.message.read(id);
 	res.json({ data: { info } });
 });

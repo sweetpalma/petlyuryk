@@ -5,12 +5,12 @@
 import { RedisStore, RedisStoreDocument } from './redis';
 
 
-export interface StorePissInfo extends RedisStoreDocument {
+export interface StorePissDocument extends RedisStoreDocument {
 	count: number;
 }
 
 
-export class StorePiss extends RedisStore<StorePissInfo> {
+export class StorePiss extends RedisStore<StorePissDocument> {
 	public readonly domain = 'petlyuryk:piss';
 	public async readCount(chatId: string) {
 		const document = await this.read(chatId);

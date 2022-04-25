@@ -68,6 +68,18 @@ const pages = {
 			{ title: 'Kick?', value: doc => doc.isKicked, width: 85 },
 		]),
 	},
+	messages: {
+		title: 'Повідомлення',
+		type: 'table',
+		fetchData: createTableFetch('/api/messages', [
+			{ title: 'ID', value: doc => doc.id, width: 155 },
+			{ title: 'Створено', value: doc => doc.createdAt && new Date(doc.createdAt).toLocaleString('uk-UA'), width: 185 },
+			{ title: 'Інтенція', value: doc => doc.intent },
+			{ title: 'IN', value: doc => doc.textInput },
+			{ title: 'OUT', value: doc => doc.textOutput },
+			{ title: 'D?', value: doc => doc.delivered, width: 85 },
+		]),
+	},
 };
 
 

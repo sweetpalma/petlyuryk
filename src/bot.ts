@@ -51,7 +51,7 @@ export const startTelegramBot = async (controller: Controller, token: string) =>
 			}
 
 			// Extract basic message information:
-			const { chat, from, reply_to_message } = msg;
+			const { chat, from, message_id, reply_to_message } = msg;
 			const chatId = chat.id.toString();
 			const isAdressedToBot = (reply_to_message?.from?.id === me.id);
 			const isGroup = (chat.type !== 'private');
@@ -124,7 +124,22 @@ export const startTelegramBot = async (controller: Controller, token: string) =>
 			// Store: Bump responded messages count and log final result:
 			await store.chat.updateValue(chatId, 'isMuted', !delivered );
 			await store.chat.updateIncrement(chatId, 'messagesResponded');
+
+			// Log: Message information:
 			logger.info('bot:message', { delivered, request, response });
+
+			// Store: Save message information:
+			await store.message.insert({
+				id: message_id.toString(),
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				delivered: delivered,
+				intent: response.intent,
+				chatId: chatId,
+				userId: from.id.toString(),
+				textInput: msg.text,
+				textOutput: response.text,
+			});
 
 		} catch (error: any) {
 			logger.error('bot:error', {

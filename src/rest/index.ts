@@ -7,6 +7,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 
 import { routerChat } from './rest-chat';
+import { routerMessage } from './rest-message';
 import { logger } from '../logger';
 
 
@@ -39,6 +40,7 @@ export const parseQuery = ({ query }: Request) => {
 export const startServer = async (port: number) => new Promise<void>(resolve => {
 	const app = express();
 	app.use('/api/chats', routerChat);
+	app.use('/api/messages', routerMessage);
 	app.use(express.static(join(__dirname, '..', '..', 'public')));
 	app.use(handleError);
 	app.listen(port, () => {
