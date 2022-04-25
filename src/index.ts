@@ -35,6 +35,14 @@ if (!PETLYURYK_STATS_PORT) {
 }
 
 
+// Must be provided by Docker Compose.
+const { PETLYURYK_PRIVACY_EXPIRE } = process.env;
+if (!PETLYURYK_PRIVACY_EXPIRE) {
+	console.error('No PETLYURYK_PRIVACY_EXPIRE provided.');
+	process.exit(1);
+}
+
+
 // Russian warship, go fuck yourself.
 (async () => {
 	try {
@@ -42,7 +50,7 @@ if (!PETLYURYK_STATS_PORT) {
 		await Store.connect(`redis://${PETLYURYK_REDIS_HOST}:${PETLYURYK_REDIS_PORT}`);
 		await loadRegexp(controller);
 		await loadNeural(controller);
-		await startTelegramBot(controller, PETLYURYK_TELEGRAM_TOKEN);
+		await startTelegramBot(controller, PETLYURYK_TELEGRAM_TOKEN, parseInt(PETLYURYK_PRIVACY_EXPIRE));
 		await startServer(parseInt(PETLYURYK_STATS_PORT));
 	} catch (error) {
 		console.error('Failed to launch Petlyuryk.');

@@ -12,7 +12,7 @@ import { logger } from './logger';
 /**
  * Start a new Telegram bot using provided controller and token string.
  */
-export const startTelegramBot = async (controller: Controller, token: string) => {
+export const startTelegramBot = async (controller: Controller, token: string, expire?: number) => {
 
 	// Prepare bot and retrieve bot information:
 	const telegram = new TelegramBot(token, { polling: true });
@@ -35,7 +35,7 @@ export const startTelegramBot = async (controller: Controller, token: string) =>
 	}));
 
 	// Log: Startup date:
-	logger.info('bot:ready');
+	logger.info('bot:ready', { expire: expire || 0 });
 
 	// Handler: Text messages:
 	telegram.on('text', async (msg) => {
@@ -140,6 +140,11 @@ export const startTelegramBot = async (controller: Controller, token: string) =>
 				textInput: msg.text,
 				textOutput: response.text,
 			});
+
+			// Store: Set message expiration:
+			if (expire) {
+				await store.message.expire(message_id.toString(), expire);
+			}
 
 		} catch (error: any) {
 			logger.error('bot:error', {

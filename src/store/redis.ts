@@ -107,6 +107,13 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	}
 
 	/**
+	 * Add expiration date in seconds for a document.
+	 */
+	public async expire(id: D['id'], seconds: number) {
+		await this.redis.expire(this.getRedisKey(id), seconds);
+	}
+
+	/**
 	 * Remove a document. Does nothing if document with such ID does not exist.
 	 */
 	public async delete(id: D['id']) {

@@ -33,6 +33,10 @@ services:
       # Must be provided by .env file:
       - PETLYURYK_TELEGRAM_TOKEN
 
+      # May be overriden - seconds after message information is removed from Redis.
+      # Default is one week.
+      - PETLYURYK_PRIVACY_EXPIRE=604800
+
       # Internal Docker Compose bindings:
       - PETLYURYK_REDIS_HOST=redis
       - PETLYURYK_REDIS_PORT=6379
