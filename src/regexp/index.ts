@@ -185,6 +185,15 @@ const replies: Array<Reply> = [
 			'В рот зайшло.',
 		],
 	},
+	{
+		intent: 'joke.ya',
+		triggers: [
+			rgx.matchFull(/я/i),
+		],
+		responses: [
+			'Головка від хуя.',
+		],
+	},
 
 
 ];
