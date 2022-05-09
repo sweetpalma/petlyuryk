@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   mongo:
-    container_name: petlyuryk-mongo
+    # container_name: petlyuryk-mongo
     restart: "always"
     image: mongo
     logging:
@@ -12,7 +12,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME
       - MONGO_INITDB_ROOT_PASSWORD
   bot:
-    container_name: petlyuryk-bot
+    # container_name: petlyuryk-bot
     restart: "always"
     build: .
     depends_on:
