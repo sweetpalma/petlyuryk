@@ -4,7 +4,7 @@ services:
   # Petlyuryk: Redis Stack (RedisJSON, RediJSON and RedisInsight):
   redis:
     image: redis/redis-stack
-    container_name: petlyuryk-redis
+    # container_name: petlyuryk-redis
     restart: unless-stopped
     logging:
       driver: none
@@ -17,7 +17,7 @@ services:
 
   # Petlyuryk: Bot:
   bot:
-    container_name: petlyuryk-bot
+    # container_name: petlyuryk-bot
     restart: unless-stopped
     build: .
     depends_on:
