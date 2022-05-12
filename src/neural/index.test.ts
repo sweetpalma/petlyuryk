@@ -56,6 +56,8 @@ const testCurrencies = [
 
 
 const testCases: Array<TestSuite> = [
+
+	// General language detection:
 	{
 		semanticGroup: 'ukrainian.none',
 		expectedIntents: [], // must ignore
@@ -74,25 +76,8 @@ const testCases: Array<TestSuite> = [
 			'э',
 		],
 	},
-	{
-		semanticGroup: 'market.rate',
-		expectedIntents: [ 'neural.uk.market.rate' ],
-		cases: [
-			...testCurrencies.map(word => `кіко коштує ${word}`),
-			...testCurrencies.map(word => `скільки коштує ${word}`),
-			...testCurrencies.map(word => `що там ${word}`),
-			...testCurrencies.map(word => `як там ${word}`),
-		],
-	},
-	{
-		semanticGroup: 'alert.all',
-		expectedIntents: [ 'neural.uk.alert.all' ],
-		cases: [
-			'де тривоги',
-			'де вибухи',
-			'де сирени',
-		],
-	},
+
+	// Module: Core:
 	{
 		semanticGroup: 'insult',
 		expectedIntents: [ 'neural.ru.none', 'neural.uk.insult' ],
@@ -227,6 +212,50 @@ const testCases: Array<TestSuite> = [
 			'шо можеш?',
 		],
 	},
+
+	// Module: UA Alert:
+	{
+		semanticGroup: 'alert.all',
+		expectedIntents: [ 'neural.uk.alert.all' ],
+		cases: [
+			'де тривоги',
+			'де вибухи',
+			'де сирени',
+		],
+	},
+
+	// Module: UA Market:
+	{
+		semanticGroup: 'market.rate',
+		expectedIntents: [ 'neural.uk.market.rate' ],
+		cases: [
+			...testCurrencies.map(word => `кіко коштує ${word}`),
+			...testCurrencies.map(word => `скільки коштує ${word}`),
+			...testCurrencies.map(word => `що там ${word}`),
+			...testCurrencies.map(word => `як там ${word}`),
+		],
+	},
+
+	// Module: UA memes:
+	{
+		semanticGroup: 'meme.rusyna',
+		expectedIntents: [ 'neural.uk.meme.rusnya' ],
+		cases: [
+			'що по русні?',
+			'шо по русні?',
+		],
+	},
+	{
+		semanticGroup: 'meme.anecdote',
+		expectedIntents: [ 'neural.uk.meme.anecdote' ],
+		cases: [
+			'анекдот',
+			'танатос один долар',
+			'танатос сто рублів',
+			'жарт',
+		],
+	},
+
 ];
 
 

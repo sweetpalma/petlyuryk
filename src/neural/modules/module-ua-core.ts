@@ -9,7 +9,6 @@ import UaCommon from '../../data/common/ua.json';
 import UaResponseHostileShort from '../../data/responses/ua-hostile-short.json';
 import UaResponseHostileGeneric from '../../data/responses/ua-hostile-generic.json';
 import UaResponseHostilePiss from '../../data/responses/ua-hostile-piss.json';
-import UaFunny from '../../data/responses/ua-funny.json';
 import UaPraises from '../../data/praises/ua.json';
 import UaInsults from '../../data/insults/ua.json';
 
@@ -27,7 +26,7 @@ const store = (
 
 
 export default neuralModule({
-	name: 'Ukrainian Misc',
+	name: 'Ukrainian Core',
 	locale: 'uk-UA',
 	entities: {
 	  insult: {
@@ -303,19 +302,6 @@ export default neuralModule({
 				'Запостити базу.',
 				'Покарати русню.',
 				'Послати струмінь.',
-			],
-		},
-		{
-			intent: 'chatter.anecdote',
-			utterances: [
-				'танатос',
-				'розкажи анекдот',
-				'розкажи жарт',
-				'анекдот',
-				'жарт',
-			],
-			answers: [
-				...UaFunny,
 			],
 		},
 	],
