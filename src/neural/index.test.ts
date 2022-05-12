@@ -212,6 +212,15 @@ const testCases: Array<TestSuite> = [
 			'шо можеш?',
 		],
 	},
+	{
+		semanticGroup: 'chatter.source',
+		expectedIntents: [ 'neural.uk.chatter.source' ],
+		cases: [
+			'кинь нюдси',
+			'покажи код',
+			'нюдси',
+		],
+	},
 
 	// Module: UA Alert:
 	{

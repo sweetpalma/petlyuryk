@@ -304,6 +304,17 @@ export default neuralModule({
 				'Послати струмінь.',
 			],
 		},
+		{
+			intent: 'chatter.source',
+			utterances: [
+				'нюдси',
+				'нюдеси',
+				'код',
+			],
+			answers: [
+				'https://github.com/sweetpalma/petlyuryk',
+			],
+		},
 	],
 });
 
