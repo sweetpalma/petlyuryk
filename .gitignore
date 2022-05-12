@@ -2,7 +2,7 @@
 node_modules/
 npm-debug.log
 
-# MongoDB data:
+# Redis Data:
 /data/
 
 # Logs:
@@ -16,6 +16,9 @@ dist/
 
 # Environment data:
 .env
+
+# Sublime SFTP config:
+sftp-config.json
 
 # Logs:
 logs/
