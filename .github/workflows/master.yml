@@ -1,4 +1,4 @@
-name: Petlyuryk Bot CI/CD
+name: Petlyuryk Legacy CI
 on:
   push:
     branches: 

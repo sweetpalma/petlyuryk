@@ -1,6 +1,7 @@
 # Installation:
 node_modules/
 npm-debug.log
+sftp-config.json
 
 # MongoDB data:
 data/
