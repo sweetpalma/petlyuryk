@@ -30,6 +30,22 @@ export default neuralModule({
 			],
 		},
 		{
+			intent: 'meme.gender',
+			utterances: [
+				'який гендер',
+				'ти лесбі',
+				'ти натурал',
+				'ти гетеро',
+				'ти трап',
+				'ти гей',
+			],
+			answers: [
+				'Я бінарно-небінарний.',
+				'Я бойовий гелікоптер.',
+				'Я бездушна машина.',
+			],
+		},
+		{
 			intent: 'meme.anecdote',
 			utterances: [
 				'танатос',

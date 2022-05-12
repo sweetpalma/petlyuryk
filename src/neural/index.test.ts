@@ -255,6 +255,18 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
+		semanticGroup: 'meme.gender',
+		expectedIntents: [ 'neural.uk.meme.gender' ],
+		cases: [
+			'який твій гендер',
+			'ти лесбі?',
+			'ти натурал?',
+			'ти гетеро?',
+			'ти трап?',
+			'ти гей?',
+		],
+	},
+	{
 		semanticGroup: 'meme.anecdote',
 		expectedIntents: [ 'neural.uk.meme.anecdote' ],
 		cases: [
