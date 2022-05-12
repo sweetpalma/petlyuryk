@@ -1,4 +1,4 @@
-name: Petlyuryk Bot CI/CD
+name: Petlyuryk Neural CI
 on: [push]
 jobs:
   validate:
