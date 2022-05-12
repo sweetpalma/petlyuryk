@@ -150,6 +150,7 @@ const replies: Array<Reply> = [
 	{
 		intent: 'joke.ni',
 		triggers: [
+			rgx.matchEnd(/мені/i),
 			rgx.matchEnd(/ні/i),
 		],
 		responses: [

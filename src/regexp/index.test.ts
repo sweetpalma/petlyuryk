@@ -148,6 +148,7 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Ні', true ],
 			[ 'Ні!', true ],
 			[ 'Ні?', true ],
+			[ 'А мені?', true ],
 			[ 'гімні', false ],
 			[ 'ні ще', false ],
 		],
