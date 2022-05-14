@@ -85,13 +85,34 @@ const replies: Array<Reply> = [
 
 	// Belarus:
 	{
-		intent: 'live.belarus',
+		intent: 'belarus',
 		triggers: [
 			rgx.matchPart(/Жыве Беларусь/i),
 			rgx.matchPart(/Живе Білорусь/i),
 		],
 		responses: [
 			'Ще не вмерла.',
+		],
+	},
+
+	// Russophobic:
+	{
+		intent: 'russophobia.short',
+		triggers: [
+			rgx.matchFull(/наша русофоб(і|и)я/i),
+			rgx.matchFull(/русофоб(і|и)я/i),
+		],
+		responses: [
+			'Недостатня.',
+		],
+	},
+	{
+		intent: 'russophobia.long',
+		triggers: [
+			rgx.matchPart(/русофоб(і|и)я/i),
+		],
+		responses: [
+			'Друзі, наша русофобія недостатня.',
 		],
 	},
 

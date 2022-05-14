@@ -86,12 +86,26 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
-		intent: 'regexp.live.belarus',
+		intent: 'regexp.belarus',
 		cases: [
 			[ 'Петлюрику, живе білорусь!', true ],
 			[ 'Жыве беларусь!', true ],
 			[ 'Лукашенку смерть, жыве беларусь!', true ],
 			[ 'Живет Белоруссия!', false ],
+		],
+	},
+	{
+		intent: 'regexp.russophobia.long',
+		cases: [
+			[ 'Опять эта русофобия', true ],
+			[ 'Що за русофобія', true ],
+		],
+	},
+	{
+		intent: 'regexp.russophobia.short',
+		cases: [
+			[ 'Наша русофобія', true ],
+			[ 'Русофобія', true ],
 		],
 	},
 	{
