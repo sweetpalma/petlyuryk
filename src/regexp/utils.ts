@@ -16,7 +16,7 @@ export const MSG_START = (
  * Generic Regular Expression to match message end with optional punctuation or trailing spaces.
  */
 export const MSG_END = (
-	/\s*(?:\.|\?|,|!)?$/
+	/\s*(?:\.|\?|,|!)*?$/
 );
 
 

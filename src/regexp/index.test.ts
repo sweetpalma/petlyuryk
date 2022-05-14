@@ -105,6 +105,7 @@ const testCasesReply: Array<TestSuite> = [
 		intent: 'regexp.russophobia.short',
 		cases: [
 			[ 'Наша русофобія', true ],
+			[ 'Наша русофобія...', true ],
 			[ 'Русофобія', true ],
 		],
 	},
