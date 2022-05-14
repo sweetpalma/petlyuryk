@@ -95,6 +95,17 @@ const replies: Array<Reply> = [
 		],
 	},
 
+	// Russian warship go fuck yourself:
+	{
+		intent: 'warship',
+		triggers: [
+			rgx.matchFull(/рус(ь|с)кий во(є|е)нн(и|ы|ьі)й кораб(е)?ль/i),
+		],
+		responses: [
+			'Йди нахуй!',
+		],
+	},
+
 	// Russophobic:
 	{
 		intent: 'russophobia.short',

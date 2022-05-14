@@ -95,6 +95,14 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.warship',
+		cases: [
+			[ 'русский военный корабль', true ],
+			[ 'руський воєнний корабель', true ],
+			[ 'русский военньій корабль', true ],
+		],
+	},
+	{
 		intent: 'regexp.russophobia.long',
 		cases: [
 			[ 'Опять эта русофобия', true ],
