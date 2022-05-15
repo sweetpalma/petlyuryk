@@ -10,6 +10,15 @@ import { logger } from './logger';
 
 
 /**
+ *  Node Telegram Bot API has no good TypeScript bindings unfortunately.
+ */
+const getChatMemberCount = async (telegram: TelegramBot, chatId: number | string) => {
+	const count = await (telegram as any).getChatMemberCount(chatId) as number;
+	return count - 1; // remove bot from count
+};
+
+
+/**
  * Start a new Telegram bot using provided controller and token string.
  */
 export const startTelegramBot = async (controller: Controller, token: string, expire?: number) => {
@@ -27,10 +36,12 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 	const [ _, ...chats ] = await store.chat.search();
 	await Promise.all(chats.map(async ({ id, ...chat }) => {
 		try {
-			await (telegram as any).getChatMemberCount(id);
+			const count = await getChatMemberCount(telegram, id);
 			await store.chat.updateValue(id, 'isKicked', false);
+			await store.chat.updateValue(id, 'members', count);
 		} catch (_) {
 			await store.chat.updateValue(id, 'isKicked', true);
+			await store.chat.updateValue(id, 'members', 0);
 		}
 	}));
 
@@ -64,6 +75,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 				isKicked: false,
 				isGroup,
 			}, {
+				members: await getChatMemberCount(telegram, chat.id),
 				createdAt: new Date(),
 				messagesProcessed: 0,
 				messagesResponded: 0,

@@ -12,6 +12,7 @@ export interface StoreChatDocument extends RedisStoreDocument {
 	messagesProcessed: number;
 	username: Nullable<string>;
 	title: Nullable<string>;
+	members: number;
 	isKicked: boolean;
 	isGroup: boolean;
 	isMuted: boolean;
@@ -24,6 +25,7 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 		id:                <const>'TAG',
 		messagesProcessed: <const>'NUMERIC',
 		messagesResponded: <const>'NUMERIC',
+		members:           <const>'NUMERIC',
 		username:          <const>'TEXT',
 		title:             <const>'TEXT',
 		isKicked:          <const>'TAG',
@@ -34,6 +36,7 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	public async stats() {
 		return {
 			total: await this.total(),
+			members: await this.totalMembers(),
 			messagesProcessed: await this.messagesProcessed(),
 			messagesResponded: await this.messagesResponded(),
 			totalKicked: (await this.listKicked(0, 0))[0],
@@ -45,6 +48,12 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	public async total() {
 		const [ total ] = await this.search('*', 0, 0);
 		return total;
+	}
+
+	public async totalMembers() {
+		type Result = { members: number };
+		const [ _, { members } ] = await this.aggregate<Result>('*', 'GROUPBY', 0, 'REDUCE', 'SUM', 1, '@members', 'AS', 'members');
+		return members;
 	}
 
 	public async messagesProcessed() {

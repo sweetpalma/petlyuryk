@@ -52,16 +52,18 @@ const pages = {
 			{ title: 'Чатів груп', value: doc => doc.totalGroup },
 			{ title: 'Чатів неактивно', value: doc => doc.totalKicked },
 			{ title: 'Чатів заглушено', value: doc => doc.totalMuted },
+			{ title: 'Користувачів', value: doc => doc.members },
 		]),
 	},
 	chats: {
 		title: 'Чати',
 		type: 'table',
 		fetchData: createTableFetch('/api/chats', [
-			{ title: 'ID', value: doc => doc.id, width: 155 },
+			// { title: 'ID', value: doc => doc.id, width: 155 },
 			// { title: 'Створено', value: doc => doc.createdAt && new Date(doc.createdAt).toLocaleDateString("uk-UA"), width: 185 },
 			{ title: 'Оновлено', value: doc => doc.updatedAt && new Date(doc.updatedAt).toLocaleDateString('uk-UA'), width: 115 },
 			{ title: 'Назва чи юзернейм', value: doc => doc.title || doc.username },
+			{ title: 'Користувачів', value: doc => doc.members, width: 85 },
 			{ title: 'IN', value: doc => doc.messagesProcessed, width: 85 },
 			{ title: 'OUT', value: doc => doc.messagesResponded, width: 85 },
 			{ title: 'Group?', value: doc => doc.isGroup, width: 90 },
@@ -73,7 +75,7 @@ const pages = {
 		title: 'Повідомлення',
 		type: 'table',
 		fetchData: createTableFetch('/api/messages', [
-			{ title: 'ID', value: doc => doc.id, width: 90 },
+			// { title: 'ID', value: doc => doc.id, width: 90 },
 			{ title: 'Створено', value: doc => doc.createdAt && new Date(doc.createdAt).toLocaleDateString('uk-UA'), width: 115 },
 			{ title: 'Інтенція', value: doc => doc.intent },
 			{ title: 'IN', value: doc => doc.textInput },
