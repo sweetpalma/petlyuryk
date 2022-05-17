@@ -107,7 +107,8 @@ body.loaded {
 	}
 
 	.header img {
-		max-width: 96px;
+		width: 96px;
+		height: 96px;
 	}
 }
 
@@ -207,7 +208,7 @@ body.loaded {
 
 	.block span,
 	.block img {
-		padding: 1em 0;
+		padding: 1em 0.5em;
 		width: 100%;
 	}
 }
@@ -299,4 +300,21 @@ body.loaded {
 	font-weight: bolder;
 	text-decoration: none;
 	color: #000;
+}
+
+@media (max-width: 568px) {
+	.footer__inner {
+		flex-direction: column;
+		text-align: center;
+	}
+
+	.footer img {
+		margin: 2em 0 1em 0;
+	}
+
+	.footer__about {
+		margin: 2em auto 2em auto;
+		text-align: center;
+		max-width: 80%;
+	}
 }
