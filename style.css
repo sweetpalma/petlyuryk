@@ -1,0 +1,302 @@
+/* Dia Fonts */
+@font-face {
+	src: url('/font/e-Ukraine-Thin.ttf') format('truetype');
+	font-family: 'eUkraineThin';
+	font-weight: normal;
+}
+
+@font-face {
+	src: url('/font/e-Ukraine-Regular.ttf') format('truetype');
+	font-family: 'eUkraineThin';
+	font-weight: bold;
+}
+
+body,
+html {
+	font-family: 'eUkraineThin';
+	line-height: 1.5;
+	max-width: 100vw;
+	overflow-x: hidden;
+	overflow-y: auto;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	background-repeat: no-repeat;
+  background-attachment: fixed;
+	background-image: url('/img/background.png');
+	background-size: cover;
+}
+
+body {
+	transition: opacity 0.5s ease-out;
+	opacity: 0;
+}
+
+body.loaded {
+	opacity: 1;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.footer__inner,
+.block__inner {
+	max-width: 800px;
+}
+
+.btn {
+	display: inline-block;
+	text-decoration: none;
+	border: 3px solid #FFF;
+	padding: 0.75em 2em;
+	font-size: inherit;
+	font-weight: bolder;
+	border-radius: 100px;
+	color: inherit;
+}
+
+.btn--primary {
+	background: #000;
+	color: #FFF;
+}
+
+.header {
+	display: flex;
+	font-size: 1em;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	padding: 8em 2em;
+}
+
+.header .btn {
+	border-color: #000;
+	font-size: 0.75em;
+}
+
+.header img {
+	border-radius: 35%;
+	height: 160px;
+	width: 160px;
+}
+
+.header h1 {
+	margin-bottom: 0.75em;
+	margin-top: 1.25em;
+	font-size: 2em;
+}
+
+.header h2 {
+	max-width: 500px;
+	min-width: 250px;
+	text-align: center;
+	font-weight: normal;
+	font-size: 1.5em;
+	padding: 0 1.5em;
+	margin: 0;
+}
+
+@media (max-width: 568px) {
+	.header {
+		font-size: 0.75em;
+	}
+
+	.header img {
+		max-width: 96px;
+	}
+}
+
+.container {
+	background: #FFF;
+	padding: 3.5em 2em;
+}
+
+.container--transparent {
+	background: none;
+}
+
+.about {
+	margin: 0 auto;
+	max-width: 650px;
+	text-align: center;
+	padding: 3em 2em;
+}
+
+.about h1 {
+	font-size: 3em;
+}
+
+.about h2 {
+	margin-top: -1em;
+	font-size: 1.5em;
+	font-weight: normal;
+	color: #666;
+}
+
+.about .btn {
+	border-color: #000;
+}
+
+@media (max-width: 568px) {
+	.about h1 {
+		font-size: 2em;
+	}
+
+	.about h2 {
+		font-size: 1.3em;
+	}
+}
+
+.footer,
+.block {
+	padding: 3em 0;
+}
+
+.block__inner {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin: 0 auto;
+}
+
+.block img {
+	width: 40%;
+	border-radius: 8px;
+	object-fit: contain;
+}
+
+.block h1 {
+	font-size: 2em;
+	text-align: center;
+	margin-bottom: 1.25em;
+	width: 100%;
+}
+
+.block span {
+	text-align: justify;
+	font-size: 1.15em;
+	padding-left: 3em;
+	width: 60%;
+}
+
+.block:last-child {
+	margin-bottom: 4em;
+}
+
+@media (max-width: 568px) {
+	.footer,
+	.container,
+	.block {
+		padding: 1.5em 0.65em;
+	}
+
+	.block__inner {
+		flex-direction: column;
+	}
+
+	.block h1 {
+		font-size: 1.5em;
+		margin-bottom: 0.5em;
+	}
+
+	.block span,
+	.block img {
+		padding: 1em 0;
+		width: 100%;
+	}
+}
+
+.github {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	text-align: center;
+	background: #25292e;
+	padding: 8em 2em;
+	color: #FFF;
+}
+
+.github h1,
+.github h2 {
+	max-width: 550px;
+	margin: 0 auto;
+}
+
+.github h1 {
+	font-size: 2em;
+	margin: 1em 0;
+}
+
+.github h2 {
+	font-size: 1.5em;
+	font-weight: normal;
+	opacity: 0.5;
+	margin-top: -0.5em;
+	margin-bottom: 0;
+}
+
+.github img {
+	max-width: 160px;
+}
+
+.github .btn {
+	font-size: 1em;
+}
+
+@media (max-width: 568px) {
+	.github h1 {
+		font-size: 1.8em;
+	}
+
+	.github h2 {
+		font-size: 1.2em;
+	}
+}
+
+.footer {
+	background: #FFF;
+	padding: ;
+}
+
+.footer__inner {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	transition: opacity .5s;
+	margin: 0 auto;
+	opacity: 0.75;
+	color: #666;
+}
+
+.footer__inner:hover {
+	opacity: 1;
+}
+
+.footer__about {
+	text-align: right;
+	margin-left: auto;
+	font-size: 0.75em;
+	max-width: 60%;
+}
+
+.footer img {
+	display: inline-block;
+	border-radius: 35%;
+	margin-right: 1em;
+	height: 64px;
+	width: 64px;
+}
+
+.footer a {
+	font-weight: bolder;
+	text-decoration: none;
+	color: #000;
+}
