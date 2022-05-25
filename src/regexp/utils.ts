@@ -84,5 +84,6 @@ export const matchEnd = (input: RegExp) => (
  * Bot personal named trigger.
  */
 export const TRIGGER = (
-	matchPart(/Петлюрику?/i)
+	// TODO find some better way without hard-coded stuff
+	matchPart(/(Петлюрику?|@PetlyurykBot|@PetlyurykTestBot)/i)
 );
