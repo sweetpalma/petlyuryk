@@ -28,14 +28,6 @@ if (!PETLYURYK_REDIS_HOST || !PETLYURYK_REDIS_PORT) {
 
 
 // Must be provided by Docker Compose.
-const { PETLYURYK_STATS_PORT } = process.env;
-if (!PETLYURYK_STATS_PORT) {
-	console.error('No PETLYURYK_STATS_PORT provided.');
-	process.exit(1);
-}
-
-
-// Must be provided by Docker Compose.
 const { PETLYURYK_PRIVACY_EXPIRE } = process.env;
 if (!PETLYURYK_PRIVACY_EXPIRE) {
 	console.error('No PETLYURYK_PRIVACY_EXPIRE provided.');
@@ -51,7 +43,7 @@ if (!PETLYURYK_PRIVACY_EXPIRE) {
 		await loadRegexp(controller);
 		await loadNeural(controller);
 		await startTelegramBot(controller, PETLYURYK_TELEGRAM_TOKEN, parseInt(PETLYURYK_PRIVACY_EXPIRE));
-		await startServer(parseInt(PETLYURYK_STATS_PORT));
+		await startServer(8001);
 	} catch (error) {
 		console.error('Failed to launch Petlyuryk.');
 		console.error(error);

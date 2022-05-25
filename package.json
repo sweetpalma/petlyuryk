@@ -13,7 +13,8 @@
     "test": "jest --verbose --all --color ./src",
     "test:watch": "jest --watchAll ./src",
     "docker": "docker-compose up --build --remove-orphans || exit 0",
-    "deploy": "docker-compose up --build -d"
+    "deploy": "docker-compose up --build -d",
+    "killer": "docker-compose down"
   },
   "dependencies": {
     "@nlpjs/basic": "^4.22.14",

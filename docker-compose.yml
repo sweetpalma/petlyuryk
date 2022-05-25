@@ -27,7 +27,7 @@ services:
       - ./public:/app/public
       - ./logs:/app/logs
     ports:
-      - "${PETLYURYK_STATS_PORT:-2205}:${PETLYURYK_STATS_PORT:-2205}"
+      - "${PETLYURYK_STATS_PORT:-2205}:8001"
     environment:
 
       # Must be provided by .env file:
@@ -40,7 +40,6 @@ services:
       # Internal Docker Compose bindings:
       - PETLYURYK_REDIS_HOST=redis
       - PETLYURYK_REDIS_PORT=6379
-      - PETLYURYK_STATS_PORT=2205
 
       # Node.JS variables:
       - NODE_NO_WARNINGS=1
