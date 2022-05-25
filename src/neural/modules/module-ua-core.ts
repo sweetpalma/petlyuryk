@@ -79,7 +79,12 @@ export default neuralModule({
 		'chatter.who.me': [
 			async (_nlp, response) => {
 				const { firstName, userName } = response.from;
-				response.answer = `Ти - ${firstName || userName || 'хуй знає хто'}.`;
+				const randomFraction = Math.random();
+				if (randomFraction > 0.2) {
+					response.answer = `Ти - ${firstName || userName || 'хуй знає хто'}.`;
+				} else {
+					response.answer = 'Ти - лох.';
+				}
 			},
 		],
 	},
@@ -257,6 +262,8 @@ export default neuralModule({
 			'utterances': [
 				'ти бот',
 				'ти робот',
+				'ти хто',
+				'а ти хто',
 				'розкажи про себе',
 				'хто ти такий',
 				'хто ти є',
