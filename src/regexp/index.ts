@@ -158,6 +158,19 @@ const replies: Array<Reply> = [
 		],
 	},
 
+	// Shrek:
+	{
+		intent: 'shrek',
+		triggers: [
+			rgx.matchPart(/шрек/i),
+		],
+		responses: [
+			'Шрек - це любов.',
+			'Шрек - це життя.',
+			'Слава Шреку!',
+		],
+	},
+
 	// Retarded jokes:
 	{
 		intent: 'joke.a',

@@ -144,6 +144,14 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.shrek',
+		cases: [
+			[ 'Шрек це життя', true ],
+			[ 'Хто такий Шрек?', true ],
+			[ 'Панцершрек', false ],
+		],
+	},
+	{
 		intent: 'regexp.joke.a',
 		cases: [
 			[ 'А', true ],
