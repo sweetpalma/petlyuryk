@@ -161,19 +161,6 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
-		semanticGroup: 'chatter.love',
-		expectedIntents: [ 'neural.uk.chatter.love' ],
-		cases: [
-			'вийди за мене заміж',
-			'одружися на мені',
-			'я тебе кохаю',
-			'я кохаю тебе',
-			'я тебе люблю',
-			'я люблю тебе',
-			'ти сексі',
-		],
-	},
-	{
 		semanticGroup: 'chatter.who.you',
 		expectedIntents: [ 'neural.uk.chatter.who.you' ],
 		cases: [
@@ -219,6 +206,35 @@ const testCases: Array<TestSuite> = [
 			'кинь нюдси',
 			'покажи код',
 			'нюдси',
+		],
+	},
+
+	// Module: UA Love:
+	{
+		semanticGroup: 'love.marry',
+		expectedIntents: [ 'neural.uk.love.marry' ],
+		cases: [
+			'вийди за мене заміж',
+			'одружися на мені',
+		],
+	},
+	{
+		semanticGroup: 'love.marry',
+		expectedIntents: [ 'neural.uk.love.you' ],
+		cases: [
+			'я тебе кохаю',
+			'я кохаю тебе',
+			'я тебе люблю',
+			'я люблю тебе',
+		],
+	},
+	{
+		semanticGroup: 'love.sex',
+		expectedIntents: [ 'neural.uk.love.sex' ],
+		cases: [
+			'хочу тебе',
+			'пішли в ліжко',
+			'давай трахатись',
 		],
 	},
 
