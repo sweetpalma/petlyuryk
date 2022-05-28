@@ -28,12 +28,14 @@ const createTableFetch = (url, schema) => (search, offset, limit) => {
 		.then(res => ({
 			schema,
 			total: res.data.total,
-			items: res.data.docs.map(doc => {
-				return schema.map(field => ({
+			items: res.data.docs.map(doc => ({
+				id: doc.id,
+				rawDoc: doc,
+				fields: schema.map(field => ({
 					...field,
 					value: formatBoolean(field.value(doc)),
-				}));
-			}),
+				})),
+			})),
 		}));
 };
 
@@ -52,7 +54,8 @@ const pages = {
 			{ title: 'Чатів груп', value: doc => doc.totalGroup },
 			{ title: 'Чатів неактивно', value: doc => doc.totalKicked },
 			{ title: 'Чатів заглушено', value: doc => doc.totalMuted },
-			{ title: 'Користувачів', value: doc => doc.members },
+			{ title: 'Користувачів всього', value: doc => doc.totalMembers },
+			{ title: 'Користувачів активно', value: doc => doc.totalMembersActive },
 		]),
 	},
 	chats: {

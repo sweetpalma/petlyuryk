@@ -50,3 +50,13 @@ routerChat.get('/:id', async (req, res) => {
 	const info = await store.chat.read(id);
 	res.json({ data: { info } });
 });
+
+
+/**
+ * GET Chat information by ID.
+ */
+routerChat.delete('/:id', async (req, res) => {
+	const { id } = req.params;
+	await store.chat.delete(id);
+	res.json({ data: null });
+});

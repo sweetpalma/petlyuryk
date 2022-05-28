@@ -54,15 +54,15 @@
 					<span class="table__info">
 						<strong>Всього документів:</strong>
 						<span style="margin-left: 8px">{{ data.total }}</span>
-						<input type="text" v-model="dataSearch"/>
+						<input type="text" class="input input--header" v-model="dataSearch"/>
 					</span>
 					<span>
 						<strong>Сторінка:</strong> {{ dataOffset / dataLimit + 1 }}
 					</span>
-					<button v-on:click="dataOffset -= dataLimit" v-bind:disabled="dataOffset == 0">
+					<button class="button button--header" v-on:click="dataOffset -= dataLimit" v-bind:disabled="dataOffset == 0">
 						Попередня
 					</button>
-					<button v-on:click="dataOffset += dataLimit" v-bind:disabled="data.items.length < dataLimit">
+					<button class="button button--header" v-on:click="dataOffset += dataLimit" v-bind:disabled="data.items.length < dataLimit">
 						Наступна
 					</button>
 				</div>
@@ -73,7 +73,7 @@
 						</th>
 					</tr>
 					<tr v-for="item in data.items">
-						<td v-for="field in item">
+						<td v-for="field in item.fields">
 							{{ field.value }}
 						</td>
 					</tr>
@@ -86,10 +86,5 @@
 			</div>
 
 		</main>
-		<!-- <footer class="footer">
-			<div class="footer__inner container">
-				<a href="https://github.com/sweetpalma/petlyuryk" target="_blank">Петлюрик</a> від <a href="https://github.com/sweetpalma/petlyuryk"target="_blank">SweetPalma</a>.
-			</div>
-		</footer> -->
 	</div>
 </body>

@@ -36,9 +36,10 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	public async stats() {
 		return {
 			total: await this.total(),
-			members: await this.totalMembers(),
 			messagesProcessed: await this.messagesProcessed(),
 			messagesResponded: await this.messagesResponded(),
+			totalMembers: await this.totalMembers(),
+			totalMembersActive: await this.totalMembersActive(),
 			totalKicked: (await this.listKicked(0, 0))[0],
 			totalMuted: (await this.listMuted(0, 0))[0],
 			totalGroup: (await this.listGroup(0, 0))[0],
@@ -51,21 +52,28 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	}
 
 	public async totalMembers() {
-		type Result = { members: number };
+		type Result = { members: string };
 		const [ _, { members } ] = await this.aggregate<Result>('*', 'GROUPBY', 0, 'REDUCE', 'SUM', 1, '@members', 'AS', 'members');
-		return members;
+		return parseInt(members);
+	}
+
+	public async totalMembersActive() {
+		type Result = { members: string, isMuted: string };
+		const [ _, ...results ] = await this.aggregate<Result>('*', 'GROUPBY', 1, '@isMuted', 'REDUCE', 'SUM', 1, '@members', 'AS', 'members');
+		const { members } = results.find(result => result.isMuted === '0')!;
+		return parseInt(members);
 	}
 
 	public async messagesProcessed() {
-		type Result = { total: number };
+		type Result = { total: string };
 		const [ _, { total } ] = await this.aggregate<Result>('*', 'GROUPBY', 0, 'REDUCE', 'SUM', 1, '@messagesProcessed', 'AS', 'total');
-		return total;
+		return parseInt(total);
 	}
 
 	public async messagesResponded() {
-		type Result = { total: number };
+		type Result = { total: string };
 		const [ _, { total } ] = await this.aggregate<Result>('*', 'GROUPBY', 0, 'REDUCE', 'SUM', 1, '@messagesResponded', 'AS', 'total');
-		return total;
+		return parseInt(total);
 	}
 
 	public async listKicked(offset?: number, limit?: number) {

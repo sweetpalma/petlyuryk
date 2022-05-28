@@ -121,15 +121,25 @@ strong {
 	flex-grow: 1;
 }
 
-.table button,
-.table input {
+.button,
+.input {
 	outline: none;
 	appearance: none;
 	font-size: inherit;
 	background: rgba(0, 0, 0, .025);
 	border: 1px solid rgba(0, 0, 0, .15);
 	padding: 8px 16px;
+}
+
+.button--header,
+.input--header {
 	margin: 0 0 0 16px;
+}
+
+.button--delete {
+	font-size: 0.65em;
+	margin-left: -8px;
+	padding: 4px 4px;
 }
 
 .table input {
