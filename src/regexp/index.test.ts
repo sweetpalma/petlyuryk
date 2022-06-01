@@ -174,14 +174,22 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
-		intent: 'regexp.joke.ni',
+		intent: "regexp.joke.ni.greatings",
 		cases: [
-			[ 'Ні', true ],
-			[ 'Ні!', true ],
-			[ 'Ні?', true ],
-			[ 'А мені?', true ],
-			[ 'гімні', false ],
-			[ 'ні ще', false ],
+			["Ні", true],
+			["Ні!", true],
+			["Ні?", true],
+			["А мені?", false],
+			["гімні", false],
+			["ні ще", false],
+		],
+	},
+	{
+		intent: "regexp.joke.ni.other",
+		cases: [
+			["А мені?", true],
+			["гімні", false],
+			["ні ще", false],
 		],
 	},
 	{

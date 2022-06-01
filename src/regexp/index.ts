@@ -193,11 +193,18 @@ const replies: Array<Reply> = [
 		],
 	},
 	{
-		intent: 'joke.ni',
-		triggers: [
-			rgx.matchEnd(/мені/i),
-			rgx.matchEnd(/ні/i),
+		intent: "joke.ni.greatings",
+		triggers: [rgx.matchEnd(/ні/i)],
+		responses: [
+			'Рука в гавні.',
+			'Рука в гімні.',
+			'Рука в гівні.',
+			'Hello! (Чи то було українською?)',
 		],
+	},
+	{
+		intent: "joke.ni.other",
+		triggers: [rgx.matchEnd(/мені/i)],
 		responses: [
 			'Рука в гавні.',
 			'Рука в гімні.',
