@@ -14,6 +14,7 @@ import * as rgx from './utils';
  */
 type Reply = {
 	intent: string;
+	probability?: number;
 	triggers: Array<RegExp>;
 	responses: Array<string>;
 };
@@ -193,13 +194,12 @@ const replies: Array<Reply> = [
 		],
 	},
 	{
-		intent: 'joke.ni.greatings',
-		triggers: [ rgx.matchEnd(/ні/i) ],
+		intent: 'joke.ni.greetings',
+		probability: 0.2,
+		triggers: [ rgx.matchFull(/ні/i) ],
 		responses: [
-			'Рука в гавні.',
-			'Рука в гімні.',
-			'Рука в гівні.',
 			'Hello! (Чи то було українською?)',
+			'Привіт.',
 		],
 	},
 	{
@@ -261,7 +261,7 @@ export * from './utils';
 /**
  * Petlyuryk RegExp processor module.
  */
-export default async (controller: Controller) => {
+export default async (controller: Controller, testMode = false) => {
 	logger.info('regexp:ready');
 	controller.addHandler(async (request) => {
 		const { id } = request;
@@ -269,6 +269,9 @@ export default async (controller: Controller) => {
 		for (const reply of replies) {
 			for (const trigger of reply.triggers) {
 				if (!text.match(trigger)) {
+					continue;
+				}
+				if (!testMode && reply.probability && Math.random() > reply.probability) {
 					continue;
 				}
 				const randomResponse = sample(reply.responses);

@@ -16,7 +16,7 @@ beforeEach(async () => {
 
 	// Prepare controller:
 	testController = new ControllerTest();
-	await loadRegexp(testController);
+	await loadRegexp(testController, true);
 
 });
 
@@ -174,7 +174,7 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
-		intent: 'regexp.joke.ni.greatings',
+		intent: 'regexp.joke.ni.greetings',
 		cases: [
 			[ 'Ні', true ],
 			[ 'Ні!', true ],

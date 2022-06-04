@@ -112,7 +112,7 @@ export const neuralModule = (submodule: NeuralModule) => (
 /**
  * Petlyuryk neural processor module.
  */
-export default async (controller: Controller) => {
+export default async (controller: Controller, testMode = false) => {
 
 	// Prepare basic NLP.JS container:
 	const container = await dockStart({
