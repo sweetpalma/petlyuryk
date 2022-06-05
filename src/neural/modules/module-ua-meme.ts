@@ -20,16 +20,6 @@ export default neuralModule({
 	},
 	data: [
 		{
-			intent: 'meme.rusnya',
-			utterances: [
-				'по русні',
-				'по русні',
-			],
-			answers: [
-				'Русні пизда!',
-			],
-		},
-		{
 			intent: 'meme.gender',
 			utterances: [
 				'який гендер',

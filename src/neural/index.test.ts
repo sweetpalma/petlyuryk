@@ -27,6 +27,9 @@ beforeAll(async () => {
 
 	// Mock axios for API requests:
 	jest.spyOn(axios, 'get').mockImplementation(async (path: string) => {
+		if (path.startsWith('https://russianwarship.rip/api/v1/statistics/latest')) {
+			return { data: { data: { date: '2022-10-10', stats: {} } } };
+		}
 		if (path.startsWith('https://emapa.fra1.cdn.digitaloceanspaces.com')) {
 			return { data: { states: { a: { enabled: true }, b: { enabled: false } } } };
 		}
@@ -264,8 +267,9 @@ const testCases: Array<TestSuite> = [
 	// Module: UA memes:
 	{
 		semanticGroup: 'meme.rusyna',
-		expectedIntents: [ 'neural.uk.meme.rusnya' ],
+		expectedIntents: [ 'neural.uk.warship' ],
 		cases: [
+			'як там дохла русня',
 			'що по русні?',
 			'шо по русні?',
 		],
