@@ -21,7 +21,7 @@ export interface RedisStoreDocument {
  * Store primary index structure.
  */
 export type RedisStoreIndex<D extends RedisStoreDocument> = {
-	[key in keyof D]?: 'TEXT' | 'TAG' | 'NUMERIC';
+	[key in keyof D]?: 'TEXT' | 'TAG' | 'NUMERIC' | 'NUMERIC:SORTABLE';
 };
 
 
@@ -161,7 +161,7 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	/**
 	 * Run RediSearch query and return result (total count and document list).
 	 */
-	public async search<T = D>(query = '*', offset = 0, limit = 10000) {
+	public async search<T = D>(query = '*', offset = 0, limit = 10000, sort?: string) {
 		await this.forceIndex(this.getRedisIndex(), this.index);
 		const redisData = await this.redis.call('ft.search', this.getRedisIndex(), query, 'LIMIT', offset, limit) as Array<unknown>;
 		const queryDocs = redisData.slice(1).filter(isArray).map(([ _, doc ]) => telejson.parse(doc));
@@ -183,7 +183,7 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	 */
 	private async createIndex(index: string, schema: RedisStoreIndex<D>) {
 		const argsPrefix = [ 'PREFIX', 1, this.domain ];
-		const argsSchema = [ 'SCHEMA', ...Object.entries(schema).map(([ key, type ]) => [ `$.${key}`, 'AS', key, type ]).flat() ];
+		const argsSchema = [ 'SCHEMA', ...Object.entries(schema).map(([ key, type ]) => [ `$.${key}`, 'AS', key, ...type.split(':') ]).flat() ];
 		await this.redis.call('ft.create', index, 'ON', 'JSON', ...argsPrefix, ...argsSchema);
 		logger.info('redis:index:create', { index, schema: this.index });
 	}
@@ -203,7 +203,9 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 		try {
 			const callResult = await this.redis.call('ft.info', this.getRedisIndex()) as Array<unknown>;
 			const infoObject = this.parseRedisArray(callResult) as { attributes: Array<[]> };
-			const attributes = infoObject.attributes.map(this.parseRedisArray).map(o => [ o.attribute, o.type ]);
+			const attributes = infoObject.attributes.map(this.parseRedisArray).map(o => {
+				return [ o.attribute, ('SORTABLE' in o) ? (o.type + ':SORTABLE') : (o.type)  ];
+			});
 			return Object.fromEntries(attributes) as RedisStoreIndex<D>;
 		} catch (_) {
 			return null;
