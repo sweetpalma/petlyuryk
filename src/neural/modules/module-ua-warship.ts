@@ -34,6 +34,7 @@ export default neuralModule({
 		{
 			intent: 'warship',
 			utterances: [
+				'ситуація на фронті',
 				'дохла русня',
 				'по росні',
 				'по русні',
