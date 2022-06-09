@@ -33,7 +33,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 
 	// Update chat information on a startup:
 	logger.info('bot:update');
-	const [ _, ...chats ] = await store.chat.search();
+	const [ _, ...chats ] = await store.chat.search('*', 'LIMIT', 0, 10000);
 	await Promise.all(chats.map(async ({ id, ...chat }) => {
 		try {
 			const count = await getChatMemberCount(telegram, id);

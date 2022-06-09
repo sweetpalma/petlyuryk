@@ -24,12 +24,12 @@ export const handleError = (err: Error, req: Request, res: Response, next: NextF
 
 
 /**
- * Express: Generic query parser.
+ * Express: Generic query parser for Redis Search.
  */
 export const parseQuery = ({ query }: Request) => {
-	const limit = query.limit ? parseInt(query.limit as string) : undefined;
-	const offset = query.offset ? parseInt(query.offset as string) : undefined;
-	const search = query.search as string;
+	const limit = query.limit ? parseInt(query.limit as string) : 10;
+	const offset = query.offset ? parseInt(query.offset as string) : 0;
+	const search = query.search ? query.search as string : '*';
 	return { offset, limit, search };
 };
 

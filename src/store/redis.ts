@@ -161,11 +161,13 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	/**
 	 * Run RediSearch query and return result (total count and document list).
 	 */
-	public async search<T = D>(query = '*', offset = 0, limit = 10000, sort?: string) {
+	public async search<T = D>(query = '*', ...args: Array<string | number>) {
 		await this.forceIndex(this.getRedisIndex(), this.index);
-		const redisData = await this.redis.call('ft.search', this.getRedisIndex(), query, 'LIMIT', offset, limit) as Array<unknown>;
-		const queryDocs = redisData.slice(1).filter(isArray).map(([ _, doc ]) => telejson.parse(doc));
-		return [ redisData[0], ...queryDocs ] as [ number, ...Array<T> ];
+		const queryData = [ this.getRedisIndex(), query, ...args ];
+		const redisData = await this.redis.call('ft.search', ...queryData) as Array<unknown>;
+		const redisDocs = redisData.slice(1).filter(isArray).map(cols => telejson.parse(cols[cols.length - 1]));
+		logger.info('redis:search', { query: `ft.search ${queryData.join(' ')}`, count: redisData[0] });
+		return [ redisData[0], ...redisDocs ] as [ number, ...Array<T> ];
 	}
 
 	/**
@@ -173,9 +175,11 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	 */
 	public async aggregate<T = unknown>(query = '*', ...args: Array<string | number>) {
 		await this.forceIndex(this.getRedisIndex(), this.index);
-		const redisData = await this.redis.call('ft.aggregate', this.getRedisIndex(), query, ...args) as Array<unknown>;
-		const queryDocs = redisData.slice(1).filter(isArray).map(this.parseRedisArray);
-		return [ redisData[0], ...queryDocs ] as [ number, ...Array<T> ];
+		const queryData = [ query, ...args ];
+		const redisData = await this.redis.call('ft.aggregate', this.getRedisIndex(), ...queryData ) as Array<unknown>;
+		const redisDocs = redisData.slice(1).filter(isArray).map(this.parseRedisArray);
+		logger.info('redis:aggregate', { query: `ft.aggregate ${queryData.join(' ')}`, count: redisData[0] });
+		return [ redisData[0], ...redisDocs ] as [ number, ...Array<T> ];
 	}
 
 	/**

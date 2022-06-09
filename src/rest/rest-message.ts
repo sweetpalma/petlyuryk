@@ -28,7 +28,7 @@ export const routerMessage = (
  */
 routerMessage.get('/', async (req, res) => {
 	const { search, offset, limit } = parseQuery(req);
-	const [ total, ...docs ] = await store.message.search(search ? `"${search}"` : '*', offset, limit);
+	const [ total, ...docs ] = await store.message.search(search, 'LIMIT', offset, limit);
 	res.json({ data: { total, docs } });
 });
 

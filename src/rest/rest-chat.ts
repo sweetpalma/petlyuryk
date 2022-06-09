@@ -28,7 +28,7 @@ export const routerChat = (
  */
 routerChat.get('/', async (req, res) => {
 	const { search, offset, limit } = parseQuery(req);
-	const [ total, ...docs ] = await store.chat.search(search ? `"${search}"` : '*', offset, limit);
+	const [ total, ...docs ] = await store.chat.search(search, 'LIMIT', offset, limit, 'SORTBY', 'members', 'DESC');
 	res.json({ data: { total, docs } });
 });
 

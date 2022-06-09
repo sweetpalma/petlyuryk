@@ -23,9 +23,9 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	public readonly domain = 'petlyuryk:chat';
 	public override readonly index = {
 		id:                <const>'TAG',
-		messagesProcessed: <const>'NUMERIC',
-		messagesResponded: <const>'NUMERIC',
-		members:           <const>'NUMERIC',
+		messagesProcessed: <const>'NUMERIC:SORTABLE',
+		messagesResponded: <const>'NUMERIC:SORTABLE',
+		members:           <const>'NUMERIC:SORTABLE',
 		username:          <const>'TEXT',
 		title:             <const>'TEXT',
 		isKicked:          <const>'TAG',
@@ -47,7 +47,7 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 	}
 
 	public async total() {
-		const [ total ] = await this.search('*', 0, 0);
+		const [ total ] = await this.search('*', 'LIMIT', 0, 0);
 		return total;
 	}
 
@@ -76,15 +76,15 @@ export class StoreChat extends RedisStore<StoreChatDocument> {
 		return parseInt(total);
 	}
 
-	public async listKicked(offset?: number, limit?: number) {
-		return this.search('@isKicked:{true}', offset, limit);
+	public async listKicked(offset = 0, limit = 10) {
+		return this.search('@isKicked:{true}', 'LIMIT', offset, limit);
 	}
 
-	public async listMuted(offset?: number, limit?: number) {
-		return this.search('@isMuted:{true}', offset, limit);
+	public async listMuted(offset = 0, limit = 10) {
+		return this.search('@isMuted:{true}', 'LIMIT', offset, limit);
 	}
 
-	public async listGroup(offset?: number, limit?: number) {
-		return this.search('@isGroup:{true}', offset, limit);
+	public async listGroup(offset = 0, limit = 10) {
+		return this.search('@isGroup:{true}', 'LIMIT', offset, limit);
 	}
 }
