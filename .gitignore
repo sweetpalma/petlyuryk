@@ -5,6 +5,7 @@ sftp-config.json
 
 # MongoDB data:
 data/
+logs/
 
 # Build results:
 dist/
