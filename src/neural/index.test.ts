@@ -14,6 +14,7 @@ import loadNeural from '.';
 
 
 jest.mock('axios');
+jest.mock('../store');
 let testController: ControllerTest;
 beforeAll(async () => {
 
@@ -99,6 +100,30 @@ const testCases: Array<TestSuite> = [
 			...UaPraises.map(word => `${word}`),
 		],
 	},
+	{
+		semanticGroup: 'reaction.upvote',
+		expectedIntents: [ 'neural.uk.reaction.upvote' ],
+		cases: [
+			...UaPraises.map(word => `тут ${word}`),
+		],
+	},
+	{
+		semanticGroup: 'reaction.downvote',
+		expectedIntents: [ 'neural.uk.reaction.downvote' ],
+		cases: [
+			...UaInsults.map(word => `тут ${word}`),
+		],
+	},
+	{
+		semanticGroup: 'statistics',
+		expectedIntents: [ 'neural.uk.statistics' ],
+		cases: [
+			'статистика',
+			'стата',
+		],
+	},
+
+	// Module: Chatter:
 	{
 		semanticGroup: 'chatter.hello',
 		expectedIntents: [ 'neural.uk.chatter.hello' ],
