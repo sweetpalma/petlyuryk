@@ -16,6 +16,7 @@
     "test:watch": "jest --watchAll ./src",
     "docker": "docker-compose up --build --remove-orphans || exit 0",
     "deploy": "docker-compose up --build -d",
+    "logger": "docker-compose logs --tail=50 -f",
     "killer": "docker-compose down"
   },
   "dependencies": {
