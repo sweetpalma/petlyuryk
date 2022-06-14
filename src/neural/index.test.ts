@@ -276,6 +276,23 @@ const testCases: Array<TestSuite> = [
 			'де сирени',
 		],
 	},
+	{
+		semanticGroup: 'alert.rate',
+		expectedIntents: [ 'neural.uk.alert.rate' ],
+		cases: [
+			'рівень тривоги',
+			'рівень небезпеки',
+		],
+	},
+	{
+		semanticGroup: 'alert.sandwich',
+		expectedIntents: [ 'neural.uk.alert.sandwich' ],
+		cases: [
+			'готуєм канапки',
+			'канапку будеш',
+			'хочу канапку',
+		],
+	},
 
 	// Module: UA Market:
 	{

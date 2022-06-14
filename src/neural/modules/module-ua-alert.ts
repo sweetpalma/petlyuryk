@@ -6,15 +6,9 @@ import axios from 'axios';
 import { neuralModule } from '..';
 
 
-export interface ResponseAlerts {
-	states: {
-		[key: string]: { enabled: boolean };
-	};
-}
-
-
 const getStatesWithAlerts = async () => {
-	const { data } = await axios.get<ResponseAlerts>('https://emapa.fra1.cdn.digitaloceanspaces.com/statuses.json');
+	type Result = {	states: { [key: string]: { enabled: boolean } } };
+	const { data } = await axios.get<Result>('https://emapa.fra1.cdn.digitaloceanspaces.com/statuses.json');
 	return Object.keys(data.states).filter(key => data.states[key].enabled);
 };
 
@@ -83,6 +77,7 @@ export default neuralModule({
 		{
 			intent: 'alert.sandwich',
 			utterances: [
+				'канапки',
 				'канапка',
 			],
 			answers: [
