@@ -3,6 +3,7 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { neuralModule } from '..';
+import UaAnecdote from '../../data/responses/ua-anecdote.json';
 
 
 export default neuralModule({
@@ -182,6 +183,35 @@ export default neuralModule({
 			],
 			answers: [
 				'https://github.com/sweetpalma/petlyuryk',
+			],
+		},
+		{
+			intent: 'chatter.gender',
+			utterances: [
+				'який гендер',
+				'ти лесбі',
+				'ти натурал',
+				'ти гетеро',
+				'ти трап',
+				'ти гей',
+			],
+			answers: [
+				'Я бінарно-небінарний.',
+				'Я бойовий гелікоптер.',
+				'Я бездушна машина.',
+			],
+		},
+		{
+			intent: 'chatter.anecdote',
+			utterances: [
+				'танатос',
+				'розкажи анекдот',
+				'розкажи жарт',
+				'анекдот',
+				'жарт',
+			],
+			answers: [
+				...UaAnecdote,
 			],
 		},
 	],

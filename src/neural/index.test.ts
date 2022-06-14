@@ -236,6 +236,28 @@ const testCases: Array<TestSuite> = [
 			'нюдси',
 		],
 	},
+	{
+		semanticGroup: 'chatter.gender',
+		expectedIntents: [ 'neural.uk.chatter.gender' ],
+		cases: [
+			'який твій гендер',
+			'ти лесбі?',
+			'ти натурал?',
+			'ти гетеро?',
+			'ти трап?',
+			'ти гей?',
+		],
+	},
+	{
+		semanticGroup: 'chatter.anecdote',
+		expectedIntents: [ 'neural.uk.chatter.anecdote' ],
+		cases: [
+			'анекдот',
+			'танатос один долар',
+			'танатос сто рублів',
+			'жарт',
+		],
+	},
 
 	// Module: UA Love:
 	{
@@ -306,36 +328,14 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 
-	// Module: UA memes:
+	// Module: UA warship:
 	{
-		semanticGroup: 'meme.rusyna',
+		semanticGroup: 'warship',
 		expectedIntents: [ 'neural.uk.warship' ],
 		cases: [
 			'як там дохла русня',
 			'що по русні?',
 			'шо по русні?',
-		],
-	},
-	{
-		semanticGroup: 'meme.gender',
-		expectedIntents: [ 'neural.uk.meme.gender' ],
-		cases: [
-			'який твій гендер',
-			'ти лесбі?',
-			'ти натурал?',
-			'ти гетеро?',
-			'ти трап?',
-			'ти гей?',
-		],
-	},
-	{
-		semanticGroup: 'meme.anecdote',
-		expectedIntents: [ 'neural.uk.meme.anecdote' ],
-		cases: [
-			'анекдот',
-			'танатос один долар',
-			'танатос сто рублів',
-			'жарт',
 		],
 	},
 
