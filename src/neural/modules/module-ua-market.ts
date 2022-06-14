@@ -6,6 +6,38 @@ import axios from 'axios';
 import { neuralModule } from '..';
 
 
+/**
+ * Uses PrivatBank exchange rate:
+ * https://api.privatbank.ua/#p24/exchange
+ */
+const getRatePrivatBank = async (currencyCode: string) => {
+	type Result = Array<{ccy: string, buy: string, sale: string}>;
+	const { data } = await axios.get<Result>('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5');
+	const targetRate = data.find(rate => rate.ccy.toLowerCase() === currencyCode.toLowerCase())?.sale;
+	if (targetRate) {
+		return parseFloat(targetRate).toFixed(2);
+	} else {
+		throw new Error();
+	}
+};
+
+
+/**
+ * Uses Coinbase exchange rate:
+ * https://docs.cloud.coinbase.com/sign-in-with-coinbase/docs/api-exchange-rates
+ */
+const getRateCoinBase = async (currencyCode: string) => {
+	type Result = { data: { rates: { [key: string]: string | undefined } } };
+	const { data } = await axios.get<Result>(`https://api.coinbase.com/v2/exchange-rates?currency=${currencyCode}`);
+	const targetRate = data.data.rates.USD;
+	if (targetRate) {
+		return parseFloat(targetRate).toFixed(2);
+	} else {
+		throw new Error();
+	}
+};
+
+
 export default neuralModule({
 	name: 'Ukrainian Market',
 	locale: 'uk-UA',
@@ -16,34 +48,41 @@ export default neuralModule({
 	  		usd: [ 'usd', 'долар', 'доллар', 'бакс' ],
 	  		eur: [ 'eur', 'євро' ],
 	  		rub: [ 'rub', 'рубль', 'рубель' ],
+
 	  		btc: [ 'btc', 'біток', 'біткоїн', 'біткоін' ],
 	  		eth: [ 'eth', 'етер', 'ефір' ],
+	  		bnb: [ 'bnb', 'байнанс' ],
+	  		ada: [ 'ada', 'кардано' ],
+	  		sol: [ 'sol', 'солана' ],
+	  		ltc: [ 'ltc', 'лайткоїн', 'лайткоін' ],
+
+	  		doge: [ 'doge', 'доге' ],
+	  		usdt: [ 'usdt', 'тезер' ],
+	  		usdс: [ 'usdc' ],
+
 	  	},
 	  },
 	},
-	// contextData: {
-	//   // btc: {
-	//   //   founded: 2007,
-	//   // },
-	// },
 	handlers: {
 		'market.rate': [
 			async (_nlp, response) => {
-				const round = (n: string | number) => parseFloat(`${n}`).toFixed(2);
-				const currencyEntity = response.entities.find(e => e.entity === 'currency');
-				const currencyCode = currencyEntity?.option;
+				const currencyCode = response.entities.find(e => e.entity === 'currency')?.option;
 				if (!currencyCode) {
 					response.answer = 'Не можу зрозуміти про що ти.';
-				} else {
+					return;
+				}
+
+				try {
 					switch (currencyCode) {
 						case 'uah': {
-							const { data } = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=UAH');
-							response.answer = `За один бакс просять ${round(1 / data.data.rates.USD)} гривень.`;
+							const rate = await getRatePrivatBank('usd');
+							response.answer = `За один бакс просять ${rate} гривень.`;
 							break;
 						}
-						case 'usd': {
-							const { data } = await axios.get('https://api.coinbase.com/v2/exchange-rates?currency=UAH');
-							response.answer = `Ціна на даний момент - ${round(1 / data.data.rates.USD)}₴.`;
+						case 'usd':
+						case 'eur': {
+							const rate = await getRatePrivatBank(currencyCode);
+							response.answer = `Ціна на даний момент - ${rate}₴.`;
 							break;
 						}
 						case 'rub': {
@@ -51,11 +90,13 @@ export default neuralModule({
 							break;
 						}
 						default: {
-							const { data } = await axios.get(`https://api.coinbase.com/v2/exchange-rates?currency=${currencyCode}`);
-							response.answer = `Ціна на даний момент - ${round(data.data.rates.USD)}$.`;
+							const rate = await getRateCoinBase(currencyCode);
+							response.answer = `Ціна на даний момент - ${rate}$.`;
 							break;
 						}
 					}
+				} catch (err) {
+					response.answer = 'Побачивши курс я вмер від крінжі.';
 				}
 			},
 		],
@@ -74,14 +115,15 @@ export default neuralModule({
 				// processed by handler
 			],
 		},
-		// {
-		// 	"intent": "ua.crypto.founded",
-		// 	"utterances": [
-		// 		"коли створили @coin",
-		// 	],
-		// 	"answers": [
-		// 		"{{ coin }} створили в {{  _data[entities.coin.option].founded }}"
-		// 	]
-		// },
+		{
+			'intent': 'market.source',
+			'utterances': [
+				'звідки дані про курс',
+				'звідки курси валют',
+			],
+			'answers': [
+				'Я беру дані курсів з Privat24 та Coinbase.',
+			],
+		},
 	],
 });

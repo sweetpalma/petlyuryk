@@ -75,7 +75,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 			const botTrigger = new RegExp(`(Петлюрику?|@${me.username}),?`, 'i');
 			const isBotTrigger = msg.text.match(botTrigger) !== null;
 			const text = msg.text.replace(botTrigger, '').trim();
-			
+
 			// Store: Log chat information:
 			await store.chat.upsert(chat.id.toString(), {
 				updatedAt: new Date(),
