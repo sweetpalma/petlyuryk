@@ -33,6 +33,7 @@ export interface ControllerRequest {
 	chat: ControllerChat;
 	user: ControllerUser;
 	text: string;
+	isBotTrigger: boolean;
 	replyTo?: Optional<{
 		isAdressedToBot: boolean;
 		messageText: string;
@@ -104,6 +105,7 @@ export class ControllerTest extends Controller {
 	public override async process(request: Partial<ControllerRequest>) {
 		return super.process({
 			id: '1234567890',
+			isBotTrigger: true,
 			text: 'Test Text',
 			chat: {
 				id: '1234567890',

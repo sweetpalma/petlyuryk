@@ -9,7 +9,6 @@ import { join } from 'path';
 import { Controller, ControllerRequest } from '../controller';
 import { logger } from '../logger';
 import { languageGuess } from './language';
-import { TRIGGER } from '../regexp';
 
 
 /**
@@ -197,22 +196,20 @@ export default async (controller: Controller, testMode = false) => {
 	controller.addHandler(async (request) => {
 
 		// Match message to the personal trigger:
-		const { text } = request;
-		const textWithoutTrigger = text.replace(TRIGGER, '').trim();
-		const isReferencedByName = text !== textWithoutTrigger;
+		const { text, isBotTrigger, replyTo } = request;
 
 		// Guess language before processing message:
-		const { locale, guessed } = guess(textWithoutTrigger);
+		const { locale, guessed } = guess(text);
 
 		// Skip message if it is in Ukrainian and is not addressed to the bot:
-		if (locale !== 'ru' && !isReferencedByName && !request.replyTo?.isAdressedToBot && request.chat.isGroup) {
+		if (locale !== 'ru' && !isBotTrigger && !replyTo?.isAdressedToBot && request.chat.isGroup) {
 			return;
 		}
 
 		// Prepare NLP.JS input:
 		const input = {
 			locale: guessed ? undefined : locale,
-			text: textWithoutTrigger,
+			text,
 			from: request.user,
 			activity: {
 				conversation: {

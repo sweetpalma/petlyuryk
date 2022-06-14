@@ -10,7 +10,7 @@ import { logger } from './logger';
 
 
 /**
- *  Node Telegram Bot API has no good TypeScript bindings unfortunately.
+ * Node Telegram Bot API has no good TypeScript bindings unfortunately.
  */
 const getChatMemberCount = async (telegram: TelegramBot, chatId: number | string) => {
 	const count = await (telegram as any).getChatMemberCount(chatId) as number;
@@ -31,8 +31,10 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 	// Store: Connect:
 	const store = new Store();
 
+	/*
 	// Update chat information on a startup:
-	logger.info('bot:update');
+	// todo fix timeouts here
+	logger.info('bot:update:start');
 	const [ _, ...chats ] = await store.chat.search('*', 'LIMIT', 0, 10000);
 	await Promise.all(chats.map(async ({ id, ...chat }) => {
 		try {
@@ -44,6 +46,8 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 			await store.chat.updateValue(id, 'members', 0);
 		}
 	}));
+	logger.info('bot:update:finish');
+	*/
 
 	// Log: Startup date:
 	logger.info('bot:ready', { expire: expire || 0 });
@@ -63,19 +67,24 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 
 			// Extract basic message information:
 			const { chat, from, message_id, reply_to_message } = msg;
-			const chatId = chat.id.toString();
 			const isAdressedToBot = (reply_to_message?.from?.id === me.id);
 			const isGroup = (chat.type !== 'private');
+			const chatId = chat.id.toString();
 
+			// Check that message is adressed to the bot and sanitize text from the trigger:
+			const botTrigger = new RegExp(`(Петлюрику?|@${me.username}),?`, 'i');
+			const isBotTrigger = msg.text.match(botTrigger) !== null;
+			const text = msg.text.replace(botTrigger, '').trim();
+			
 			// Store: Log chat information:
 			await store.chat.upsert(chat.id.toString(), {
 				updatedAt: new Date(),
+				members: await getChatMemberCount(telegram, chat.id),
 				username: chat.username || null,
 				title: chat.title || null,
 				isKicked: false,
 				isGroup,
 			}, {
-				members: await getChatMemberCount(telegram, chat.id),
 				createdAt: new Date(),
 				messagesProcessed: 0,
 				messagesResponded: 0,
@@ -85,7 +94,8 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 			// Build a controller request:
 			const request: ControllerRequest = {
 				id: msg.message_id.toString(),
-				text: msg.text,
+				isBotTrigger,
+				text,
 				chat: {
 					id: chatId,
 					title: chat.title,
@@ -149,7 +159,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 				intent: response.intent,
 				chatId: chatId,
 				userId: from.id.toString(),
-				textInput: msg.text,
+				textInput: text,
 				textOutput: response.text,
 			});
 

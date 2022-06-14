@@ -45,9 +45,7 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Слава Україні !', true ],
 			[ 'Слава Україні?', true ],
 			[ 'Слава Україні.', true ],
-			[ 'Петлюрику, Слава Україні!', true ],
 			[ 'Панове, Слава Україні', true ],
-			[ 'Слава Україні, Петлюрику', true ],
 			[ 'Сала Україні', false ],
 		],
 	},
@@ -66,7 +64,6 @@ const testCasesReply: Array<TestSuite> = [
 		intent: 'regexp.glory.over',
 		cases: [
 			[ 'Україна', true ],
-			[ 'Петлюрику, Україна!', true ],
 			[ 'Україна, Панове', false ],
 			[ 'україна', false ],
 		],
@@ -74,7 +71,6 @@ const testCasesReply: Array<TestSuite> = [
 	{
 		intent: 'regexp.bandera.father',
 		cases: [
-			[ 'Петлюрику, батько наш Бандера', true ],
 			[ 'Батько наш - Бандера', true ],
 			[ 'Батько наш Бандера', true ],
 		],

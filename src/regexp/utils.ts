@@ -78,12 +78,3 @@ export const matchStart = (input: RegExp) => (
 export const matchEnd = (input: RegExp) => (
 	compose([ MSG_START_OR_SPACER, input, MSG_END ])
 );
-
-
-/**
- * Bot personal named trigger.
- */
-export const TRIGGER = (
-	// TODO find some better way without hard-coded stuff
-	matchPart(/(Петлюрику?|@PetlyurykBot|@PetlyurykTestBot)/i)
-);

@@ -264,8 +264,7 @@ export * from './utils';
 export default async (controller: Controller, testMode = false) => {
 	logger.info('regexp:ready');
 	controller.addHandler(async (request) => {
-		const { id } = request;
-		const text = request.text.replace(rgx.TRIGGER, '').trim();
+		const { id, text } = request;
 		for (const reply of replies) {
 			for (const trigger of reply.triggers) {
 				if (!text.match(trigger)) {
