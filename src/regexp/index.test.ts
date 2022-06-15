@@ -82,6 +82,15 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.vinnytsia',
+		cases: [
+			[ 'Я їду у Вінницю', true ],
+			[ 'Я у Вінниці зараз', true ],
+			[ 'Я знаю що Вінниця краще місто України', true ],
+			[ 'Вінницькі тут?', true ],
+		],
+	},
+	{
 		intent: 'regexp.belarus',
 		cases: [
 			[ 'Петлюрику, живе білорусь!', true ],
