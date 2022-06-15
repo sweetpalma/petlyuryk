@@ -3,10 +3,15 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { sample } from 'lodash';
 import TelegramBot from 'node-telegram-bot-api';
+import UaResponsesWelcome from './data/responses/ua-welcome.json';
 import { Controller, ControllerRequest } from './controller';
-import { Store } from './store';
 import { logger } from './logger';
+import { Store } from './store';
+
+
+// todo refactor this mess
 
 
 /**
@@ -90,6 +95,12 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 				messagesResponded: 0,
 				isMuted: false,
 			});
+
+			// Special case: Greeting message:
+			if (text === '/start' && (isBotTrigger || !isGroup)) {
+				await telegram.sendMessage(chatId, sample(UaResponsesWelcome)!);
+				return;
+			}
 
 			// Build a controller request:
 			const request: ControllerRequest = {
@@ -176,10 +187,28 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 		}
 	});
 
-	// Handler: Mute status:
+	// Handler: Mute/Kicked status & Greeting Message:
 	telegram.on('my_chat_member' as any, async (msg: any) => {
-		const canSendMessages = msg.new_chat_member?.can_send_messages || false;
-		await store.chat.updateValue(msg.chat.id.toString(), 'isMuted', !canSendMessages );
+
+		// Build new status:
+		const chatId = msg.chat.id.toString();
+		const isAbleToSendMessage = msg.new_chat_member?.can_send_messages || false;
+		const isJoined = msg.old_chat_member?.status === 'left' && msg.new_chat_member?.status !== 'left';
+		const isKicked = msg.old_chat_member?.status !== 'left' && msg.new_chat_member?.status === 'left';
+
+		// Status updates:
+		await store.chat.updateValue(chatId, 'isMuted', !isAbleToSendMessage && !isJoined);
+		await store.chat.updateValue(chatId, 'isKicked', isKicked );
+		if (isKicked) {
+			logger.info('bot:kicked', { chatId, title: msg.chat.title || null });
+		}
+
+		// Greeting message:
+		if (isJoined) {
+			logger.info('bot:joined', { chatId, title: msg.chat.title || null, members: await getChatMemberCount(telegram, chatId) });
+			await telegram.sendMessage(chatId, sample(UaResponsesWelcome)!);
+		}
+
 	});
 
 };
