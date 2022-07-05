@@ -10,6 +10,20 @@ export default neuralModule({
 	name: 'Ukrainian Chatter',
 	locale: 'uk-UA',
 	handlers: {
+		'chatter.thanks': [
+			async (_nlp, response) => {
+				if (response.score < 0.95) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
+		],
+		'chatter.right': [
+			async (_nlp, response) => {
+				if (response.score < 0.9) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
+		],
 		'chatter.who.me': [
 			async (_nlp, response) => {
 				const { firstName, userName } = response.from;
@@ -205,6 +219,7 @@ export default neuralModule({
 			intent: 'chatter.anecdote',
 			utterances: [
 				'танатос',
+				'розкажи анегдот',
 				'розкажи анекдот',
 				'розкажи жарт',
 				'анекдот',
