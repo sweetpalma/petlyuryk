@@ -68,6 +68,7 @@ export default neuralModule({
 				'пішли в ліжко',
 				'пішли трахатись',
 				'/starthorny',
+				'хорні',
 			],
 			answers: [
 				'Знімай штани.',
