@@ -70,8 +70,8 @@ export const languageGuess = (container: unknown) => {
 			locale = 'uk';
 		}
 
-		// Guess fix: Short words (less then 3 characters):
-		if (locale === 'ru' && !text.match(letterRu) && text.length < 3) {
+		// Guess fix: Short words (less then 4 characters):
+		if (locale === 'ru' && !text.match(letterRu) && text.length < 4) {
 			guessed = false;
 			locale = 'uk';
 		}
