@@ -83,14 +83,14 @@ export default neuralModule({
 		'insult': [
 			async (_nlp, response) => {
 				if (response.score < 0.95) {
-					response.answer = '';
+					response.answer = 'Мені здалось, чи ти биканув?';
 				}
 			},
 		],
 		'praise': [
 			async (_nlp, response) => {
 				if (response.score < 0.95) {
-					response.answer = '';
+					response.answer = 'Мені здалось, чи ти биканув?';
 				}
 			},
 		],
@@ -123,6 +123,7 @@ export default neuralModule({
 				...UaResponseHostileShort,
 				...UaInsults.map(word => `ти ${word}`),
 				...UaInsults.map(word => `${word}`),
+				'rm -rf',
 			],
 			answers: [
 				...UaResponseHostileGeneric,
