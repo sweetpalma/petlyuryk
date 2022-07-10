@@ -90,6 +90,7 @@ const replies: Array<Reply> = [
 		triggers: [
 			rgx.matchPart(/вінн?иц(я|і|ю)/i),
 			rgx.matchPart(/вінн?ицьк(а|і|ий)/i),
+			rgx.matchPart(/вінн?ичан(и|ин|ка)/i),
 		],
 		responses: [
 			'Вінниця – кращий зі світів.',
@@ -174,6 +175,20 @@ const replies: Array<Reply> = [
 		],
 		responses: [
 			'Путін - хуйло.',
+		],
+	},
+
+	// Arestovych:
+	{
+		intent: 'arestovych',
+		triggers: [
+			rgx.matchPart(/п(и|і)здоболич/i),
+			rgx.matchPart(/арестович/i),
+		],
+		responses: [
+			'Арестович - малорос.',
+			'Арестович - піздоболич.',
+			'Арестович - лох.',
 		],
 	},
 

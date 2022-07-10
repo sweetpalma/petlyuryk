@@ -87,6 +87,7 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Я їду у Вінницю', true ],
 			[ 'Я у Вінниці зараз', true ],
 			[ 'Я знаю що Вінниця краще місто України', true ],
+			[ 'Що ви там вінничани', true ],
 			[ 'Вінницькі тут?', true ],
 		],
 	},
@@ -146,6 +147,15 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Хто Путін?', true ],
 			[ 'Путін хто?', true ],
 			[ 'Ох уж цей путін', true ],
+		],
+	},
+	{
+		intent: 'regexp.arestovych',
+		cases: [
+			[ 'Арестович', true ],
+			[ 'Арестович - лох', true ],
+			[ 'Знов Арестович?', true ],
+			[ 'Пиздоболич', true ],
 		],
 	},
 	{
