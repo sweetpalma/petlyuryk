@@ -73,7 +73,7 @@ const testCases: Array<TestSuite> = [
 		semanticGroup: 'russian.none',
 		expectedIntents: [ 'neural.ru.none' ],
 		cases: [
-			...RuCommon,
+			...RuCommon.filter(word => word.length > 3),
 			'ы',
 			'ё',
 			'ъ',
