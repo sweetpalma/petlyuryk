@@ -36,6 +36,7 @@ export interface ControllerRequest {
 	isBotTrigger: boolean;
 	replyTo?: Optional<{
 		isAdressedToBot: boolean;
+		userId: string;
 		messageText: string;
 		messageId: string;
 	}>;

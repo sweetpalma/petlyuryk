@@ -120,6 +120,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 				},
 				replyTo: reply_to_message && {
 					isAdressedToBot,
+					userId: reply_to_message.from?.id.toString() || '0',
 					messageId: reply_to_message.message_id.toString(),
 					messageText: reply_to_message.text!,
 				},
