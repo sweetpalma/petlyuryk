@@ -5,7 +5,10 @@
 /* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
 const { dockStart } = require('@nlpjs/basic');
 import { readdirSync } from 'fs';
+import { sample } from 'lodash';
 import { join } from 'path';
+import UaDunnoAsk from '../data/responses/ua-dunno-ask.json';
+import UaDunnoEnd from '../data/responses/ua-dunno-end.json';
 import { Controller, ControllerRequest } from '../controller';
 import { logger } from '../logger';
 import { languageGuess } from './language';
@@ -232,6 +235,18 @@ export default async (controller: Controller, testMode = false) => {
 			classifications: response.classifications.filter(c => c.score > 0),
 			entities: response.entities,
 		});
+
+		// Prepare DUNNO response:
+		if (!response.answer && request.replyTo && request.replyTo.messageText !== '...') {
+			const { messageText } = request.replyTo;
+			if (UaDunnoEnd.includes(messageText)) {
+				response.answer = '...';
+			} else if (UaDunnoAsk.includes(messageText)) {
+				response.answer = sample(UaDunnoEnd)!;
+			} else {
+				response.answer = sample(UaDunnoAsk)!;
+			}
+		}
 
 		// Pack a response:
 		if (response.answer) {
