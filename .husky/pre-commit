@@ -1,6 +1,9 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run lint
+# Lint staged:
+npx lint-staged --allow-empty
+
+# Run tests and TODO highlighter:
 npm run test
 npm run todo
