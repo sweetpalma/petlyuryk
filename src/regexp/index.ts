@@ -274,15 +274,6 @@ const replies: Array<Reply> = [
 		],
 	},
 	{
-		intent: 'joke.sho',
-		triggers: [
-			rgx.matchEnd(/(капшо|шо)/i),
-		],
-		responses: [
-			'В рот зайшло.',
-		],
-	},
-	{
 		intent: 'joke.ya',
 		triggers: [
 			rgx.matchFull(/я/i),

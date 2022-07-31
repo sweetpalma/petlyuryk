@@ -238,16 +238,6 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
-		intent: 'regexp.joke.sho',
-		cases: [
-			[ 'Капшо', true ],
-			[ 'Шо', true ],
-			[ 'Шо?', true ],
-			[ 'Що', false ],
-			[ 'шо ти', false ],
-		],
-	},
-	{
 		intent: 'regexp.joke.ya',
 		cases: [
 			[ 'Я', true ],
