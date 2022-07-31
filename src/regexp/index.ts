@@ -192,6 +192,17 @@ const replies: Array<Reply> = [
 		],
 	},
 
+	// Avakov:
+	{
+		intent: 'avakov',
+		triggers: [
+			rgx.matchPart(/аваков/i),
+		],
+		responses: [
+			'Аваков - чорт.',
+		],
+	},
+
 	// Shrek:
 	{
 		intent: 'shrek',

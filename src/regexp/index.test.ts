@@ -159,6 +159,16 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.avakov',
+		cases: [
+			[ 'Аваков', true ],
+			[ 'Аваков - лох', true ],
+			[ 'Знов Аваков?', true ],
+			[ 'Авак', false ],
+			[ 'Ков', false ],
+		],
+	},
+	{
 		intent: 'regexp.shrek',
 		cases: [
 			[ 'Шрек це життя', true ],
