@@ -2,7 +2,7 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
-/* eslint-disable no-console, @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
 const { dockStart } = require('@nlpjs/basic');
 import { readdirSync } from 'fs';
 import { sample } from 'lodash';
@@ -121,6 +121,7 @@ export default async (controller: Controller, testMode = false) => {
 		use: [ 'Basic', 'LangUk', 'LangRu' ],
 		settings: {
 			nlp: {
+				nlu: { log: () => null },
 	    	threshold: NEURAL_THRESHOLD,
 	    	trainByDomain: false,
 	    	autoLoad: false,
@@ -183,16 +184,9 @@ export default async (controller: Controller, testMode = false) => {
 	}
 
 	// Train neural model.
-	// Console is disable with monkey patching because there is literally no other way to do this.
 	const startDate = new Date();
-	const consoleLog = console.log;
-	console.log = () => {};
 	await nlp.train();
-	console.log = consoleLog;
-	logger.info('neural:train', {
-		startDate,
-		endDate: new Date(),
-	});
+	logger.info('neural:train', { startDate, endDate: new Date() });
 
 	// Build up the final controller handler:
 	logger.info('neural:ready');
