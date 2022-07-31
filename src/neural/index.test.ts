@@ -2,6 +2,7 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
+/// <reference types="jest-extended" />
 import axios from 'axios';
 import { logger } from '../logger';
 import { ControllerTest } from '../controller';
@@ -73,7 +74,7 @@ const testCases: Array<TestSuite> = [
 		semanticGroup: 'russian.none',
 		expectedIntents: [ 'neural.ru.none' ],
 		cases: [
-			...RuCommon.filter(word => word.length > 3),
+			...RuCommon,
 			'ы',
 			'ё',
 			'ъ',
@@ -346,7 +347,8 @@ describe.each(testCases)('Neural - Semantic Group "$semanticGroup"', ({ cases, e
 	test.each(cases)('react to "%s"', async (text) => {
 		const response = await testController.process({ text });
 		if (expectedIntents.length > 0) {
-			expect(expectedIntents).toContain(response?.intent);
+			expect(response?.intent).toBeOneOf(expectedIntents);
+			// expect(expectedIntents).toContain(response?.intent);
 		} else {
 			expect(response?.intent).toBeUndefined();
 		}

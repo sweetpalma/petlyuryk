@@ -25,6 +25,9 @@ export const languageGuess = (container: unknown) => {
 	const letterUa = /[іїєґ'‘]/i;
 	const letterRu = /[ыэъё]/i;
 
+	// If RU score = 0, UK score must be lower than this:
+	const UKRAINIAN_THRESHOLD = 0.85;
+
 	// Return a tuned language guessing function tied to the existing NLP.JS container:
 	return (text: string) => {
 
@@ -34,7 +37,20 @@ export const languageGuess = (container: unknown) => {
 		// Make basic NLP.JS guess:
 		try {
 			const guessList = language.guess(text, [ 'uk', 'ru' ]) as Array<LanguageGuess>;
-			locale = guessList[0]?.alpha2 || 'uk';
+			const guessTop = guessList[0];
+			const guessUkr = guessList.find(guess => guess.alpha2 === 'uk');
+			const guessRus = guessList.find(guess => guess.alpha2 === 'ru');
+
+			if (guessRus && guessUkr && guessRus.score > guessUkr.score && guessUkr.score < UKRAINIAN_THRESHOLD) {
+				locale = 'ru';
+			} else {
+				locale = 'uk';
+			}
+
+			if (guessTop.alpha2 !== locale) {
+				guessed = false;
+			}
+
 		} catch (error) {
 			guessed = false;
 			locale = 'uk';
@@ -48,30 +64,6 @@ export const languageGuess = (container: unknown) => {
 
 		// Guess fix: Ukrainian letters -> Mark as Ukrainian:
 		if (locale === 'ru' && text.match(letterUa)) {
-			guessed = false;
-			locale = 'uk';
-		}
-
-		// Guess fix: Laughter:
-		if (locale === 'ru' && !text.match(letterRu) && text.match(/(аха|хах|хех|хпх)/i)) {
-			guessed = false;
-			locale = 'uk';
-		}
-
-		// Guess fix: Same character repeat:
-		if (locale === 'ru' && !text.match(letterRu) && text.match(/^(.)\1*$/i)) {
-			guessed = false;
-			locale = 'uk';
-		}
-
-		// Guess fix: Smiles:
-		if (locale === 'ru' && !text.match(letterRu) && text.match(/^:[\S]{1,3}$/i)) {
-			guessed = false;
-			locale = 'uk';
-		}
-
-		// Guess fix: Short words (less then 4 characters):
-		if (locale === 'ru' && !text.match(letterRu) && text.length < 4) {
 			guessed = false;
 			locale = 'uk';
 		}

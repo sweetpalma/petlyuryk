@@ -37,6 +37,7 @@
     "express": "^4.17.3",
     "express-async-errors": "^3.1.1",
     "ioredis": "^5.0.4",
+    "jest-extended": "^3.0.1",
     "leasot": "^13.1.0",
     "lodash": "^4.17.21",
     "mongodb": "^4.3.1",
@@ -68,7 +69,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "setupFilesAfterEnv": [],
+    "setupFilesAfterEnv": ["jest-extended/all"],
     "roots": [
       "./src"
     ]
