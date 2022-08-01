@@ -2,40 +2,13 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
-import { neuralModule } from '..';
+import { NeuralCorpus } from '..';
 import UaAnecdote from '../../data/responses/ua-anecdote.json';
 
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Ukrainian Chatter',
 	locale: 'uk-UA',
-	handlers: {
-		'chatter.thanks': [
-			async (_nlp, response) => {
-				if (response.score < 0.95) {
-					response.answer = 'Мені здалось, чи ти биканув?';
-				}
-			},
-		],
-		'chatter.right': [
-			async (_nlp, response) => {
-				if (response.score < 0.9) {
-					response.answer = 'Мені здалось, чи ти биканув?';
-				}
-			},
-		],
-		'chatter.who.me': [
-			async (_nlp, response) => {
-				const { firstName, userName } = response.from;
-				const randomFraction = Math.random();
-				if (randomFraction > 0.2) {
-					response.answer = `Ти - ${firstName || userName || 'хуй знає хто'}.`;
-				} else {
-					response.answer = 'Ти - лох.';
-				}
-			},
-		],
-	},
 	data: [
 		{
 			intent: 'chatter.hello',
@@ -95,6 +68,11 @@ export default neuralModule({
 				'Будь ласка.',
 				'Звертайся.',
 			],
+			handler(nlp, response) {
+				if (response.score < 0.95) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
 		},
 		{
 			intent: 'chatter.right',
@@ -116,6 +94,11 @@ export default neuralModule({
 			answers: [
 				'Ага.',
 			],
+			handler(nlp, response) {
+				if (response.score < 0.9) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
 		},
 		{
 			intent: 'chatter.wrong',
@@ -133,8 +116,8 @@ export default neuralModule({
 			],
 		},
 		{
-			'intent': 'chatter.who.you',
-			'utterances': [
+			intent: 'chatter.who.you',
+			utterances: [
 				'ти бот',
 				'ти робот',
 				'ти хто',
@@ -144,7 +127,7 @@ export default neuralModule({
 				'хто ти є',
 				'хто ти',
 			],
-			'answers': [
+			answers: [
 				'Мене звати Петлюрик.',
 				'Я - страшна кара російськомовній заразі.',
 				'Я - караючий струмінь українського народу.',
@@ -153,13 +136,19 @@ export default neuralModule({
 			],
 		},
 		{
-			'intent': 'chatter.who.me',
-			'utterances': [
+			intent: 'chatter.who.me',
+			utterances: [
 				'хто я',
 			],
-			'answers': [
-				// processed by handler
-			],
+			handler(nlp, response) {
+				const { firstName, userName } = response.from;
+				const randomFraction = Math.random();
+				if (randomFraction > 0.2) {
+					response.answer = `Ти - ${firstName || userName || 'хуй знає хто'}.`;
+				} else {
+					response.answer = 'Ти - лох.';
+				}
+			},
 		},
 		{
 			intent: 'chatter.who.creator',

@@ -7,11 +7,14 @@ const { dockStart } = require('@nlpjs/basic');
 import { readdirSync } from 'fs';
 import { sample } from 'lodash';
 import { join } from 'path';
+
+import { logger } from '../logger';
+import { Controller, ControllerRequest } from '../controller';
 import UaDunnoAsk from '../data/responses/ua-dunno-ask.json';
 import UaDunnoEnd from '../data/responses/ua-dunno-end.json';
-import { Controller, ControllerRequest } from '../controller';
-import { logger } from '../logger';
 import { languageGuess } from './language';
+import { NeuralCorpus } from './corpus';
+export { NeuralCorpus };
 
 
 /**
@@ -20,35 +23,6 @@ import { languageGuess } from './language';
 export const NEURAL_THRESHOLD = (
 	0.7
 );
-
-
-/**
- * Typed wrapper around NLP.JS corpus structure, augmented with intent handler map.
- */
-export interface NeuralModule {
-	name: string;
-	locale: string;
-	data: Array<{
-		intent: string;
-		utterances: Array<string>;
-		answers: Array<string>;
-	}>;
-	handlers?: {
-		[key: string]: Array<NeuralHandler>;
-	};
-	contextData?: {
-		[key: string]: {
-			[option: string]: string | number | boolean;
-		}
-	};
-	entities?: {
-		[key: string]: string | {
-			options: {
-				[option: string]: Array<string>;
-			}
-		}
-	};
-}
 
 
 /**
@@ -84,32 +58,6 @@ export interface NeuralResponse {
 	};
 }
 
-/**
- * Typed NLP.JS intent handler.
- */
-export interface NeuralHandler {
-	(_nlp: unknown, response: NeuralResponse): void | Promise<void>;
-}
-
-
-/**
- * Typed NLP.JS language guessing result.
- */
-export interface NeuralLanguage {
-	language: string;
-	alpha3: string;
-	alpha2: string;
-	score: number;
-}
-
-
-/**
- * Typed neural submodule helper.
- */
-export const neuralModule = (submodule: NeuralModule) => (
-	submodule
-);
-
 
 /**
  * Petlyuryk neural processor module.
@@ -137,17 +85,6 @@ export default async (controller: Controller, testMode = false) => {
 	// Extract custom language guesser:
 	const guess = languageGuess(container);
 
-	// Prepare unified intent handler:
-	const neuralHandlers: NeuralModule['handlers'] = {};
-	nlp.onIntent = async (_nlp: typeof nlp, response: NeuralResponse) => {
-		const intentHandlers = neuralHandlers[response.intent];
-		if (intentHandlers) {
-			for (const handler of intentHandlers) {
-				await handler(_nlp, response);
-			}
-		}
-	};
-
 	// Load neural sub-modules:
 	const moduleList = readdirSync(join(__dirname, 'modules'));
 	for (const moduleFileName of moduleList) {
@@ -158,21 +95,9 @@ export default async (controller: Controller, testMode = false) => {
 			const [ moduleName ] = moduleFileName.split('.');
 			logger.info('neural:load', { moduleName });
 
-			// Evaluate module and extract NLP.JS corpus and intent handler information:
-			const { handlers, ...corpus } = require(moduleFilePath).default as NeuralModule;
-
-			// Load NLP.JS corpus:
-			await nlp.addCorpus(corpus);
-
-			// Load optional intent handlers:
-			if (handlers) {
-				Object.keys(handlers).map(intent => {
-					neuralHandlers[intent] = [
-						...(neuralHandlers[intent] || []),
-						...handlers[intent],
-					];
-				});
-			}
+			// Import neural corpus and load it:
+			const corpus = require(moduleFilePath).default as NeuralCorpus;
+			corpus.load(nlp);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {

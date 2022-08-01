@@ -1,6 +1,11 @@
-import { neuralModule } from '..';
+/**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
+import { NeuralCorpus } from '..';
 
-export default neuralModule({
+
+export default new NeuralCorpus({
 	name: 'Ukrainian Love',
 	locale: 'uk-UA',
 	data: [

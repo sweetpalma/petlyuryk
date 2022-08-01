@@ -18,6 +18,7 @@
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/no-unused-vars": ["warn", {"args": "none", "varsIgnorePattern": "^_"}],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"quote-props": ["error", "consistent-as-needed"],
 		"comma-dangle": ["warn", "always-multiline"],
 		"array-bracket-spacing": ["warn", "always"],
 		"object-curly-spacing": ["warn", "always"]

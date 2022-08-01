@@ -3,7 +3,7 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import axios from 'axios';
-import { neuralModule } from '..';
+import { NeuralCorpus } from '..';
 
 
 const getStatesWithAlerts = async () => {
@@ -13,12 +13,19 @@ const getStatesWithAlerts = async () => {
 };
 
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Ukrainian Misc',
 	locale: 'uk-UA',
-	handlers: {
-		'alert.all': [
-			async (_nlp, response) => {
+	data: [
+		{
+			intent: 'alert.all',
+			utterances: [
+				'де тривога',
+				'де небезпечно',
+				'де вибухи',
+				'де сирена',
+			],
+			async handler(nlp, response) {
 				try {
 					const statesWithAlert = await getStatesWithAlerts();
 					if (statesWithAlert.length > 0) {
@@ -31,9 +38,14 @@ export default neuralModule({
 					response.answer = 'Щось зламалось, спробуй пізніше.';
 				}
 			},
-		],
-		'alert.rate': [
-			async (_nlp, response) => {
+		},
+		{
+			intent: 'alert.rate',
+			utterances: [
+				'рівень небезпеки',
+				'рівень тривоги',
+			],
+			async handler(nlp, response) {
 				try {
 					const statesWithAlertCount = (await getStatesWithAlerts()).length;
 					if (statesWithAlertCount < 1) {
@@ -49,30 +61,6 @@ export default neuralModule({
 					response.answer = 'Щось зламалось, спробуй пізніше.';
 				}
 			},
-		],
-	},
-	data: [
-		{
-			intent: 'alert.all',
-			utterances: [
-				'де тривога',
-				'де небезпечно',
-				'де вибухи',
-				'де сирена',
-			],
-			answers: [
-				// processed by handler
-			],
-		},
-		{
-			intent: 'alert.rate',
-			utterances: [
-				'рівень небезпеки',
-				'рівень тривоги',
-			],
-			answers: [
-				// processed by handler
-			],
 		},
 		{
 			intent: 'alert.sandwich',

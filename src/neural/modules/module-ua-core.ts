@@ -3,8 +3,9 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { sample } from 'lodash';
-import { neuralModule, NeuralResponse } from '..';
+import { NeuralCorpus, NeuralResponse } from '..';
 import { Store } from '../../store';
+
 import UaCommon from '../../data/common/ua.json';
 import UaResponsesFriendly from '../../data/responses/ua-friendly.json';
 import UaResponseHostileShort from '../../data/responses/ua-hostile-short.json';
@@ -12,6 +13,7 @@ import UaResponseHostileGeneric from '../../data/responses/ua-hostile-generic.js
 import UaResponseHostilePiss from '../../data/responses/ua-hostile-piss.json';
 import UaPraises from '../../data/praises/ua.json';
 import UaInsults from '../../data/insults/ua.json';
+
 
 
 const store = (
@@ -43,7 +45,7 @@ const reactionHandler = async (_nlp: unknown, response: NeuralResponse) => {
 };
 
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Ukrainian Core',
 	locale: 'uk-UA',
 	entities: {
@@ -53,63 +55,6 @@ export default neuralModule({
 	  praise: {
 	  	options: Object.fromEntries(UaPraises.map(word => [ word, [ word ] ])),
 	  },
-	},
-	handlers: {
-		'reaction.upvote': [
-			async (_nlp, response) => {
-				await reactionHandler(_nlp, response);
-				const { conversation } = response.activity;
-				if (!conversation.sourceEvent.replyTo) {
-					conversation.replyTo = conversation.sourceEvent.id;
-					response.answer = `${sample(niceTryUpvote)} ${sample(UaResponseHostilePiss)}`;
-				}
-			},
-		],
-		'reaction.downvote': [
-			async (_nlp, response) => {
-				await reactionHandler(_nlp, response);
-				const { conversation } = response.activity;
-				if (conversation.sourceEvent.replyTo?.isAdressedToBot) {
-					conversation.replyTo = conversation.sourceEvent.id;
-					response.answer = `${sample(niceTryDownvote)} ${response.answer}`;
-				}
-				try {
-					await store.piss.bumpCount(conversation.sourceEvent.chat.id);
-				} catch (_) {
-					return;
-				}
-			},
-		],
-		'insult': [
-			async (_nlp, response) => {
-				if (response.score < 0.95) {
-					response.answer = 'Мені здалось, чи ти биканув?';
-				}
-			},
-		],
-		'praise': [
-			async (_nlp, response) => {
-				if (response.score < 0.95) {
-					response.answer = 'Мені здалось, чи ти биканув?';
-				}
-			},
-		],
-		'statistics': [
-			async (_nlp, response) => {
-				try {
-					const chatId = response.activity.conversation.sourceEvent.chat.id;
-					const pissInfo = await store.piss.readCount(chatId);
-					const chatInfo = await store.chat.read(chatId);
-					if (chatInfo) {
-						const { messagesProcessed, messagesResponded, title } = chatInfo;
-						const chatName = title || response.from.firstName || response.from.userName;
-						response.answer = `У чаті ${chatName} було оброблено ${messagesProcessed} повідомлень та надіслано ${messagesResponded} відповідей. Струменів відправлено: ${pissInfo}.`;
-					}
-				} catch (_) {
-					response.answer = 'Щось пішло не так. Голова тлумачиться...';
-				}
-			},
-		],
 	},
 	data: [
 		{
@@ -129,6 +74,11 @@ export default neuralModule({
 				...UaResponseHostileGeneric,
 				...UaResponseHostilePiss,
 			],
+			handler(nlp, response) {
+				if (response.score < 0.95) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
 		},
 		{
 			intent: 'praise',
@@ -144,6 +94,11 @@ export default neuralModule({
 				'Хоч хтось мене цінує.',
 				'* червоніє *',
 			],
+			handler(nlp, response) {
+				if (response.score < 0.95) {
+					response.answer = 'Мені здалось, чи ти биканув?';
+				}
+			},
 		},
 		{
 			intent: 'reaction.upvote',
@@ -153,6 +108,14 @@ export default neuralModule({
 			answers: [
 				...UaResponsesFriendly,
 			],
+			async handler(nlp, response) {
+				await reactionHandler(nlp, response);
+				const { conversation } = response.activity;
+				if (!conversation.sourceEvent.replyTo) {
+					conversation.replyTo = conversation.sourceEvent.id;
+					response.answer = `${sample(niceTryUpvote)} ${sample(UaResponseHostilePiss)}`;
+				}
+			},
 		},
 		{
 			intent: 'reaction.downvote',
@@ -167,6 +130,19 @@ export default neuralModule({
 			answers: [
 				...UaResponseHostilePiss,
 			],
+			async handler(nlp, response) {
+				await reactionHandler(nlp, response);
+				const { conversation } = response.activity;
+				if (conversation.sourceEvent.replyTo?.isAdressedToBot) {
+					conversation.replyTo = conversation.sourceEvent.id;
+					response.answer = `${sample(niceTryDownvote)} ${response.answer}`;
+				}
+				try {
+					await store.piss.bumpCount(conversation.sourceEvent.chat.id);
+				} catch (_) {
+					return;
+				}
+			},
 		},
 		{
 			intent: 'statistics',
@@ -174,9 +150,20 @@ export default neuralModule({
 				'статистика',
 				'стата',
 			],
-			answers: [
-				// processed by handler
-			],
+			async handler(nlp, response) {
+				try {
+					const chatId = response.activity.conversation.sourceEvent.chat.id;
+					const pissInfo = await store.piss.readCount(chatId);
+					const chatInfo = await store.chat.read(chatId);
+					if (chatInfo) {
+						const { messagesProcessed, messagesResponded, title } = chatInfo;
+						const chatName = title || response.from.firstName || response.from.userName;
+						response.answer = `У чаті ${chatName} було оброблено ${messagesProcessed} повідомлень та надіслано ${messagesResponded} відповідей. Струменів відправлено: ${pissInfo}.`;
+					}
+				} catch (_) {
+					response.answer = 'Щось пішло не так. Голова тлумачиться...';
+				}
+			},
 		},
 	],
 });

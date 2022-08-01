@@ -3,7 +3,7 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import axios from 'axios';
-import { neuralModule } from '..';
+import { NeuralCorpus } from '..';
 
 
 /**
@@ -38,7 +38,7 @@ const getRateCoinBase = async (currencyCode: string) => {
 };
 
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Ukrainian Market',
 	locale: 'uk-UA',
 	entities: {
@@ -63,9 +63,17 @@ export default neuralModule({
 	  	},
 	  },
 	},
-	handlers: {
-		'market.rate': [
-			async (_nlp, response) => {
+	data: [
+		{
+			intent: 'market.rate',
+			utterances: [
+				'кіко коштує @currency',
+				'скільки коштує @currency',
+				'що там @currency',
+				'шо там @currency',
+				'як там @currency',
+			],
+			async handler(nlp, response) {
 				const currencyCode = response.entities.find(e => e.entity === 'currency')?.option;
 				if (!currencyCode) {
 					response.answer = 'Не можу зрозуміти про що ти.';
@@ -99,29 +107,14 @@ export default neuralModule({
 					response.answer = 'Побачивши курс я вмер від крінжі.';
 				}
 			},
-		],
-	},
-	data: [
-		{
-			'intent': 'market.rate',
-			'utterances': [
-				'кіко коштує @currency',
-				'скільки коштує @currency',
-				'що там @currency',
-				'шо там @currency',
-				'як там @currency',
-			],
-			'answers': [
-				// processed by handler
-			],
 		},
 		{
-			'intent': 'market.source',
-			'utterances': [
+			intent: 'market.source',
+			utterances: [
 				'звідки дані про курс',
 				'звідки курси валют',
 			],
-			'answers': [
+			answers: [
 				'Я беру дані курсів з Privat24 та Coinbase.',
 			],
 		},

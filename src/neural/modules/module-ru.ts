@@ -2,7 +2,7 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
-import { neuralModule } from '..';
+import { NeuralCorpus } from '..';
 import UaAggressiveResponseGeneric from '../../data/responses/ua-hostile-generic.json';
 import UaAggressiveResponseRussian from '../../data/responses/ua-hostile-russian.json';
 import UaAggressiveResponsePiss from '../../data/responses/ua-hostile-piss.json';
@@ -10,7 +10,7 @@ import RuInsults from '../../data/insults/ru.json';
 import RuCommon from '../../data/common/ru.json';
 
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Russian Misc',
 	locale: 'ru-Ru',
 	data: [

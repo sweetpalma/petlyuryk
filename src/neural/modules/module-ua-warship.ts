@@ -3,14 +3,21 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import axios from 'axios';
-import { neuralModule } from '..';
+import { NeuralCorpus } from '..';
 
-export default neuralModule({
+export default new NeuralCorpus({
 	name: 'Ukrainian Misc',
 	locale: 'uk-UA',
-	handlers: {
-		'warship': [
-			async (_nlp, response) => {
+	data: [
+		{
+			intent: 'warship',
+			utterances: [
+				'ситуація на фронті',
+				'дохла русня',
+				'по росні',
+				'по русні',
+			],
+			async handler(nlp, response) {
 				const res = await axios.get('https://russianwarship.rip/api/v1/statistics/latest');
 				const data = res.data.data as { date: string, stats: { [key: string]: number } };
 				response.answer = [
@@ -28,20 +35,6 @@ export default neuralModule({
 					'Русні пизда!',
 				].join('\n');
 			},
-		],
-	},
-	data: [
-		{
-			intent: 'warship',
-			utterances: [
-				'ситуація на фронті',
-				'дохла русня',
-				'по росні',
-				'по русні',
-			],
-			answers: [
-				// processed by handler
-			],
 		},
 	],
 });
