@@ -67,8 +67,9 @@ export class NeuralCorpus<User = ControllerUser, Event = ControllerRequest> {
 			}
 			if (handler) {
 				handlers.push(async (nlp, response) => {
-					if (response.intent !== intent) return;
-					await handler(nlp, response);
+					if (response.locale === locale && response.intent === intent) {
+						await handler(nlp, response);
+					}
 				});
 			}
 		}
