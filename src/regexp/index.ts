@@ -256,8 +256,18 @@ const replies: Array<Reply> = [
 		],
 	},
 	{
+		intent: 'joke.chuesh',
+		triggers: [
+			rgx.matchEnd(/чуєш/i),
+		],
+		responses: [
+			'На хую переночуєш.',
+		],
+	},
+	{
 		intent: 'joke.ne',
 		triggers: [
+			rgx.matchEnd(/не/i),
 			rgx.matchEnd(/нє/i),
 		],
 		responses: [

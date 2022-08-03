@@ -3,10 +3,12 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { sample } from 'lodash';
-import { NeuralCorpus, NeuralResponse } from '..';
 import { Store } from '../../store';
+import { NeuralCorpus } from '..';
 
 import UaCommon from '../../data/common/ua.json';
+import UaDunnoAsk from '../../data/responses/ua-dunno-ask.json';
+import UaDunnoEnd from '../../data/responses/ua-dunno-end.json';
 import UaResponsesFriendly from '../../data/responses/ua-friendly.json';
 import UaResponseHostileShort from '../../data/responses/ua-hostile-short.json';
 import UaResponseHostileGeneric from '../../data/responses/ua-hostile-generic.json';
@@ -34,17 +36,6 @@ const niceTryDownvote = [
 ];
 
 
-const reactionHandler = async (_nlp: unknown, response: NeuralResponse) => {
-	if (response.score < 0.95) {
-		response.answer = '';
-	}
-	const { conversation } = response.activity;
-	if (conversation.sourceEvent.replyTo) {
-		conversation.replyTo = conversation.sourceEvent.replyTo.messageId;
-	}
-};
-
-
 export default new NeuralCorpus({
 	name: 'Ukrainian Core',
 	locale: 'uk-UA',
@@ -60,7 +51,19 @@ export default new NeuralCorpus({
 		{
 			intent: 'None',
 			utterances: UaCommon,
-			answers: [],
+			handler(nlp, response) {
+				const request = response.activity.conversation.sourceEvent;
+				if (request.replyTo && request.replyTo.messageText !== '...') {
+					const { messageText } = request.replyTo;
+					if (UaDunnoEnd.includes(messageText)) {
+						response.answer = '...';
+					} else if (UaDunnoAsk.includes(messageText)) {
+						response.answer = sample(UaDunnoEnd)!;
+					} else {
+						response.answer = sample(UaDunnoAsk)!;
+					}
+				}
+			},
 		},
 		{
 			intent: 'insult',
@@ -109,8 +112,13 @@ export default new NeuralCorpus({
 				...UaResponsesFriendly,
 			],
 			async handler(nlp, response) {
-				await reactionHandler(nlp, response);
+				if (response.score < 0.95) {
+					response.answer = '';
+				}
 				const { conversation } = response.activity;
+				if (conversation.sourceEvent.replyTo) {
+					conversation.replyTo = conversation.sourceEvent.replyTo.messageId;
+				}
 				if (!conversation.sourceEvent.replyTo) {
 					conversation.replyTo = conversation.sourceEvent.id;
 					response.answer = `${sample(niceTryUpvote)} ${sample(UaResponseHostilePiss)}`;
@@ -131,8 +139,13 @@ export default new NeuralCorpus({
 				...UaResponseHostilePiss,
 			],
 			async handler(nlp, response) {
-				await reactionHandler(nlp, response);
+				if (response.score < 0.95) {
+					response.answer = '';
+				}
 				const { conversation } = response.activity;
+				if (conversation.sourceEvent.replyTo) {
+					conversation.replyTo = conversation.sourceEvent.replyTo.messageId;
+				}
 				if (conversation.sourceEvent.replyTo?.isAdressedToBot) {
 					conversation.replyTo = conversation.sourceEvent.id;
 					response.answer = `${sample(niceTryDownvote)} ${response.answer}`;
@@ -157,7 +170,7 @@ export default new NeuralCorpus({
 					const chatInfo = await store.chat.read(chatId);
 					if (chatInfo) {
 						const { messagesProcessed, messagesResponded, title } = chatInfo;
-						const chatName = title || response.from.firstName || response.from.userName;
+						const chatName = title || response.from.firstName || response.from.username;
 						response.answer = `У чаті ${chatName} було оброблено ${messagesProcessed} повідомлень та надіслано ${messagesResponded} відповідей. Струменів відправлено: ${pissInfo}.`;
 					}
 				} catch (_) {

@@ -141,10 +141,10 @@ export default new NeuralCorpus({
 				'хто я',
 			],
 			handler(nlp, response) {
-				const { firstName, userName } = response.from;
+				const { firstName, username } = response.from;
 				const randomFraction = Math.random();
 				if (randomFraction > 0.2) {
-					response.answer = `Ти - ${firstName || userName || 'хуй знає хто'}.`;
+					response.answer = `Ти - ${firstName || username || 'хуй знає хто'}.`;
 				} else {
 					response.answer = 'Ти - лох.';
 				}

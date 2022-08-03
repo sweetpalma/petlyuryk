@@ -1,4 +1,9 @@
 /**
+ * Part of Petlyuryk by SweetPalma, all rights reserved.
+ * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
+ */
+
+/**
  * Type that could be either T or undefined.
  */
 declare type Optional<T> = (
@@ -12,3 +17,4 @@ declare type Optional<T> = (
 declare type Nullable<T> = (
 	T | null
 );
+

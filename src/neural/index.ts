@@ -3,15 +3,12 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
-const { dockStart } = require('@nlpjs/basic');
+import { dockStart } from '@nlpjs/basic';
 import { readdirSync } from 'fs';
-import { sample } from 'lodash';
 import { join } from 'path';
 
 import { logger } from '../logger';
-import { Controller, ControllerRequest } from '../controller';
-import UaDunnoAsk from '../data/responses/ua-dunno-ask.json';
-import UaDunnoEnd from '../data/responses/ua-dunno-end.json';
+import { Controller, ControllerUser, ControllerRequest } from '../controller';
 import { languageGuess } from './language';
 import { NeuralCorpus } from './corpus';
 export { NeuralCorpus };
@@ -23,40 +20,6 @@ export { NeuralCorpus };
 export const NEURAL_THRESHOLD = (
 	0.7
 );
-
-
-/**
- * Typed wrapper around NLP.JS response structure.
- */
-export interface NeuralResponse {
-	text: string;
-	answer: string;
-	locale: string;
-	intent: string;
-	score: number;
-	from: {
-		firstName?: string;
-		lastName?: string;
-		userName?: string;
-		userId: string;
-	};
-	classifications: Array<{
-		intent: string;
-		score: number;
-	}>;
-	entities: Array<{
-		option: string;
-		accuracy: number;
-		entity: string;
-	}>;
-	activity: {
-		conversation: {
-			id: string;
-			sourceEvent: ControllerRequest;
-			replyTo: string;
-		};
-	};
-}
 
 
 /**
@@ -80,7 +43,7 @@ export default async (controller: Controller, testMode = false) => {
 	});
 
 	// Extract NLP module from container:
-	const nlp = container.get('nlp');
+	const nlp = container.get<ControllerUser, ControllerRequest>('nlp');
 
 	// Extract custom language guesser:
 	const guess = languageGuess(container);
@@ -128,10 +91,10 @@ export default async (controller: Controller, testMode = false) => {
 			return;
 		}
 
-		// Prepare NLP.JS input:
-		const input = {
-			locale: guessed ? undefined : locale,
+		// Run NLP.JS processor:
+		const response = await nlp.process({
 			text,
+			locale: guessed ? undefined : locale,
 			from: request.user,
 			activity: {
 				conversation: {
@@ -140,10 +103,9 @@ export default async (controller: Controller, testMode = false) => {
 					replyTo: request.id,
 				},
 			},
-		};
+		});
 
-		// Run NLP.JS processor and stop if no answer:
-		const response: NeuralResponse = await nlp.process(input);
+		// Log:
 		logger.info('neural:response', {
 			locale: response.locale,
 			intent: response.intent,
@@ -155,26 +117,17 @@ export default async (controller: Controller, testMode = false) => {
 			entities: response.entities,
 		});
 
-		// Prepare DUNNO response:
-		if (!response.answer && request.replyTo && request.replyTo.messageText !== '...') {
-			const { messageText } = request.replyTo;
-			if (UaDunnoEnd.includes(messageText)) {
-				response.answer = '...';
-			} else if (UaDunnoAsk.includes(messageText)) {
-				response.answer = sample(UaDunnoEnd)!;
-			} else {
-				response.answer = sample(UaDunnoAsk)!;
-			}
+		// Stop if no response:
+		if (!response.answer) {
+			return;
 		}
 
 		// Pack a response:
-		if (response.answer) {
-			return {
-				intent: `neural.${response.locale}.${response.intent}`.toLowerCase(),
-				replyTo: { messageId: response.activity.conversation.replyTo },
-				text: response.answer,
-			};
-		}
+		return {
+			intent: `neural.${response.locale}.${response.intent}`.toLowerCase(),
+			replyTo: { messageId: response.activity.conversation.replyTo },
+			text: response.answer,
+		};
 
 	});
 

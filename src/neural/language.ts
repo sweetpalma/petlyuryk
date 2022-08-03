@@ -2,26 +2,16 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
-
-
-/**
- * Language guess result.
- */
-export interface LanguageGuess {
-	language: string;
-	alpha3: string;
-	alpha2: string;
-	score: number;
-}
+import { Container } from '@nlpjs/basic';
 
 
 /**
  * Dedicated NLP.JS language guesser + additional fixes for Ukrainian/Russian detection.
  */
-export const languageGuess = (container: unknown) => {
+export const languageGuess = (container: Container) => {
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const language = (container as any).get('Language');
+	const language = container.get('Language');
 	const letterUa = /[іїєґ'‘]/i;
 	const letterRu = /[ыэъё]/i;
 
@@ -36,7 +26,7 @@ export const languageGuess = (container: unknown) => {
 
 		// Make basic NLP.JS guess:
 		try {
-			const guessList = language.guess(text, [ 'uk', 'ru' ]) as Array<LanguageGuess>;
+			const guessList = language.guess(text, [ 'uk', 'ru' ]);
 			const guessTop = guessList[0];
 			const guessUkr = guessList.find(guess => guess.alpha2 === 'uk');
 			const guessRus = guessList.find(guess => guess.alpha2 === 'ru');
@@ -68,7 +58,7 @@ export const languageGuess = (container: unknown) => {
 			locale = 'uk';
 		}
 
-		// Pack result - later it will be used in a core neural module:
+		// Pack result:
 		return { guessed, locale };
 
 	};
