@@ -18,7 +18,7 @@ export { NeuralCorpus };
  * Neural network threshold.
  */
 export const NEURAL_THRESHOLD = (
-	0.7
+	0.5
 );
 
 

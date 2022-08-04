@@ -76,7 +76,7 @@ declare module '@nlpjs/basic' {
 		addDocument(locale: string, utterance: string, intent: string): void;
 		addAnswer(locale: string, intent: string, answer: string): void;
 		addEntities(entities: NlpEntities, locale: string): void;
-		onIntent: NlpHandler<User, Event>;
+		onIntent?: NlpHandler<User, Event>;
 	}
 
 	/**

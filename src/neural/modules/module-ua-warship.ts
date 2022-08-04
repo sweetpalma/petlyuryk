@@ -14,8 +14,8 @@ export default new NeuralCorpus({
 			utterances: [
 				'ситуація на фронті',
 				'дохла русня',
-				'по росні',
-				'по русні',
+				'росня',
+				'русня',
 			],
 			async handler(nlp, response) {
 				const res = await axios.get('https://russianwarship.rip/api/v1/statistics/latest');

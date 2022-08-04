@@ -38,6 +38,9 @@ beforeAll(async () => {
 		if (path.startsWith('https://api.coinbase.com')) {
 			return { data: { data: { rates: { USD: 1 } } } };
 		}
+		if (path.startsWith('https://api.privatbank.ua/')) {
+			return { data: [ { ccy: 'USD', buy: '5.0', sale: '5.0' }, { ccy: 'EUR', buy: '8.0', sale: '8.0' } ] };
+		}
 	});
 
 });
@@ -57,6 +60,11 @@ const testCurrencies = [
 	'rub', 'рубль', 'рубель',
 	'btc', 'біток', 'біткоїн', 'біткоін',
 	'eth', 'етер', 'ефір',
+	'bnb', 'байнанс',
+	'ada', 'кардано',
+	'sol', 'солана',
+	'ltc', 'лайткоїн', 'лайткоін',
+	'doge', 'доге',
 ];
 
 
@@ -174,7 +182,7 @@ const testCases: Array<TestSuite> = [
 		expectedIntents: [ 'neural.uk.chatter.right' ],
 		cases: [
 			'ага',
-			'згоден з тобою',
+			'згоден',
 			'ти правий',
 			'точно',
 		],
@@ -319,13 +327,23 @@ const testCases: Array<TestSuite> = [
 
 	// Module: UA Market:
 	{
-		semanticGroup: 'market.rate',
-		expectedIntents: [ 'neural.uk.market.rate' ],
+		semanticGroup: 'market.rate.all',
+		expectedIntents: [ 'neural.uk.market.rate.all' ],
+		cases: [
+			'курс валюти',
+			'курс валюти',
+		],
+	},
+	{
+		semanticGroup: 'market.rate.currency',
+		expectedIntents: [ 'neural.uk.market.rate.currency' ],
 		cases: [
 			...testCurrencies.map(word => `кіко коштує ${word}`),
 			...testCurrencies.map(word => `скільки коштує ${word}`),
 			...testCurrencies.map(word => `що там ${word}`),
 			...testCurrencies.map(word => `як там ${word}`),
+			...testCurrencies.map(word => `що по ${word}`),
+			...testCurrencies.map(word => `шо по ${word}`),
 		],
 	},
 
@@ -334,6 +352,7 @@ const testCases: Array<TestSuite> = [
 		semanticGroup: 'warship',
 		expectedIntents: [ 'neural.uk.warship' ],
 		cases: [
+			'русня',
 			'як там дохла русня',
 			'що по русні?',
 			'шо по русні?',
@@ -348,7 +367,6 @@ describe.each(testCases)('Neural - Semantic Group "$semanticGroup"', ({ cases, e
 		const response = await testController.process({ text });
 		if (expectedIntents.length > 0) {
 			expect(response?.intent).toBeOneOf(expectedIntents);
-			// expect(expectedIntents).toContain(response?.intent);
 		} else {
 			expect(response?.intent).toBeUndefined();
 		}
