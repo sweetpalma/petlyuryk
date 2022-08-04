@@ -2,7 +2,9 @@
 Петлюрик |status|
 =================
 
-.. |status| image:: https://github.com/sweetpalma/petlyuryk/workflows/Petlyuryk%20Neural%20CI/badge.svg
+.. |status| 
+	image:: https://github.com/sweetpalma/petlyuryk/workflows/Petlyuryk%20Neural%20CI/badge.svg
+	:target: https://github.com/sweetpalma/petlyuryk/actions/workflows/neural.yaml
 
 `Петлюрик <https://t.me/Petlyuryk>`_ - перший в світі бот-русофоб. Просто додайте його в групу - і він буде наводити жах на його учасників, жорстоко караючи за будь-які прояви русизму.
 
