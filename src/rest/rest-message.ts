@@ -3,7 +3,7 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { Router } from 'express';
-import { Store } from '../store';
+import { Store } from '~/store';
 import { parseQuery } from '.';
 
 

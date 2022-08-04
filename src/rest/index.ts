@@ -6,9 +6,9 @@ import { join } from 'path';
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 
-import { routerChat } from './rest-chat';
+import { logger } from '~/logger';
 import { routerMessage } from './rest-message';
-import { logger } from '../logger';
+import { routerChat } from './rest-chat';
 
 
 /**

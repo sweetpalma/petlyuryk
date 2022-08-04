@@ -6,7 +6,7 @@ import Redis from 'ioredis';
 import * as telejson from 'telejson';
 import { zip, isEqual, isArray } from 'lodash';
 import { Mutex } from 'async-mutex';
-import { logger } from '../logger';
+import { logger } from '~/logger';
 
 
 /**

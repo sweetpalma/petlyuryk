@@ -3,12 +3,12 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 /* eslint-disable no-console */
-import { Controller } from './controller';
-import { startTelegramBot } from './bot';
-import { startServer } from './rest';
-import loadNeural from './neural';
-import loadRegexp from './regexp';
-import { Store } from './store';
+import { Controller } from '~/controller';
+import { startTelegramBot } from '~/bot';
+import { startServer } from '~/rest';
+import loadNeural from '~/neural';
+import loadRegexp from '~/regexp';
+import { Store } from '~/store';
 
 
 // Must be provided by user.

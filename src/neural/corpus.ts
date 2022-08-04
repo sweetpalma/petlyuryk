@@ -4,7 +4,7 @@
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Nlp, NlpHandler, NlpEntities } from '@nlpjs/basic';
-import { ControllerUser, ControllerRequest } from '../controller';
+import { ControllerUser, ControllerRequest } from '~/controller';
 
 
 /**

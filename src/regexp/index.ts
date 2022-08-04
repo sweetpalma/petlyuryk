@@ -3,9 +3,9 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { sample } from 'lodash';
-import UaResponseHostileShort from '../data/responses/ua-hostile-short.json';
-import { Controller } from '../controller';
-import { logger } from '../logger';
+import UaResponseHostileShort from '~/data/responses/ua-hostile-short.json';
+import { Controller } from '~/controller';
+import { logger } from '~/logger';
 import * as rgx from './utils';
 
 

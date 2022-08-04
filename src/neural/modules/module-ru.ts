@@ -3,11 +3,11 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { NeuralCorpus } from '..';
-import UaAggressiveResponseGeneric from '../../data/responses/ua-hostile-generic.json';
-import UaAggressiveResponseRussian from '../../data/responses/ua-hostile-russian.json';
-import UaAggressiveResponsePiss from '../../data/responses/ua-hostile-piss.json';
-import RuInsults from '../../data/insults/ru.json';
-import RuCommon from '../../data/common/ru.json';
+import UaAggressiveResponseGeneric from '~/data/responses/ua-hostile-generic.json';
+import UaAggressiveResponseRussian from '~/data/responses/ua-hostile-russian.json';
+import UaAggressiveResponsePiss from '~/data/responses/ua-hostile-piss.json';
+import RuInsults from '~/data/insults/ru.json';
+import RuCommon from '~/data/common/ru.json';
 
 
 export default new NeuralCorpus({

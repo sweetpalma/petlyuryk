@@ -5,10 +5,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { sample } from 'lodash';
 import TelegramBot from 'node-telegram-bot-api';
-import UaResponsesWelcome from './data/responses/ua-welcome.json';
-import { Controller, ControllerRequest } from './controller';
-import { logger } from './logger';
-import { Store } from './store';
+import UaResponsesWelcome from '~/data/responses/ua-welcome.json';
+import { Controller, ControllerRequest } from '~/controller';
+import { logger } from '~/logger';
+import { Store } from '~/store';
 
 
 // todo refactor this mess

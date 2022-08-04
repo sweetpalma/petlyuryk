@@ -2,8 +2,8 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
-import { ControllerTest } from '../controller';
-import { logger } from '../logger';
+import { ControllerTest } from '~/controller';
+import { logger } from '~/logger';
 import loadRegexp from '.';
 
 

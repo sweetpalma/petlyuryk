@@ -3,18 +3,18 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { sample } from 'lodash';
-import { Store } from '../../store';
+import { Store } from '~/store';
 import { NeuralCorpus } from '..';
 
-import UaCommon from '../../data/common/ua.json';
-import UaDunnoAsk from '../../data/responses/ua-dunno-ask.json';
-import UaDunnoEnd from '../../data/responses/ua-dunno-end.json';
-import UaResponsesFriendly from '../../data/responses/ua-friendly.json';
-import UaResponseHostileShort from '../../data/responses/ua-hostile-short.json';
-import UaResponseHostileGeneric from '../../data/responses/ua-hostile-generic.json';
-import UaResponseHostilePiss from '../../data/responses/ua-hostile-piss.json';
-import UaPraises from '../../data/praises/ua.json';
-import UaInsults from '../../data/insults/ua.json';
+import UaCommon from '~/data/common/ua.json';
+import UaDunnoAsk from '~/data/responses/ua-dunno-ask.json';
+import UaDunnoEnd from '~/data/responses/ua-dunno-end.json';
+import UaResponsesFriendly from '~/data/responses/ua-friendly.json';
+import UaResponseHostileShort from '~/data/responses/ua-hostile-short.json';
+import UaResponseHostileGeneric from '~/data/responses/ua-hostile-generic.json';
+import UaResponseHostilePiss from '~/data/responses/ua-hostile-piss.json';
+import UaPraises from '~/data/praises/ua.json';
+import UaInsults from '~/data/insults/ua.json';
 
 
 

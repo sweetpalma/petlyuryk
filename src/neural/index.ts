@@ -7,8 +7,8 @@ import { dockStart } from '@nlpjs/basic';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
-import { logger } from '../logger';
-import { Controller, ControllerUser, ControllerRequest } from '../controller';
+import { logger } from '~/logger';
+import { Controller, ControllerUser, ControllerRequest } from '~/controller';
 import { languageGuess } from './language';
 import { NeuralCorpus } from './corpus';
 export { NeuralCorpus };

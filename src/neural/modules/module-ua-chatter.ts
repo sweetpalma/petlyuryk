@@ -3,7 +3,7 @@
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
 import { NeuralCorpus } from '..';
-import UaAnecdote from '../../data/responses/ua-anecdote.json';
+import UaAnecdote from '~/data/responses/ua-anecdote.json';
 
 
 export default new NeuralCorpus({

@@ -4,18 +4,18 @@
  */
 /// <reference types="jest-extended" />
 import axios from 'axios';
-import { logger } from '../logger';
-import { ControllerTest } from '../controller';
-import UaPraises from '../data/praises/ua.json';
-import UaInsults from '../data/insults/ua.json';
-import RuInsults from '../data/insults/ru.json';
-import UaCommon from '../data/common/ua.json';
-import RuCommon from '../data/common/ru.json';
+import { logger } from '~/logger';
+import { ControllerTest } from '~/controller';
+import UaPraises from '~/data/praises/ua.json';
+import UaInsults from '~/data/insults/ua.json';
+import RuInsults from '~/data/insults/ru.json';
+import UaCommon from '~/data/common/ua.json';
+import RuCommon from '~/data/common/ru.json';
 import loadNeural from '.';
 
 
 jest.mock('axios');
-jest.mock('../store');
+jest.mock('~/store');
 let testController: ControllerTest;
 beforeAll(async () => {
 
