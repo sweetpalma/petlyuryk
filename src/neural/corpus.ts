@@ -23,6 +23,11 @@ export class NeuralCorpus<User = ControllerUser, Event = ControllerRequest> {
 	public readonly locale: string;
 
 	/**
+	 * Corpus domain.
+	 */
+	public readonly domain?: Optional<string>;
+
+	/**
 	 * Corpus data and handlers.
 	 */
 	public readonly data: Array<{
@@ -39,6 +44,7 @@ export class NeuralCorpus<User = ControllerUser, Event = ControllerRequest> {
 
 	constructor(opts: Omit<NeuralCorpus<User, Event>, 'load'>) {
 		this.name = opts.name;
+		this.domain = opts.domain;
 		this.entities = opts.entities;
 		this.locale = opts.locale;
 		this.data = opts.data;
@@ -59,6 +65,9 @@ export class NeuralCorpus<User = ControllerUser, Event = ControllerRequest> {
 		for (const { intent, utterances, answers, handler } of this.data) {
 			for (const utterance of utterances) {
 				nlp.addDocument(locale, utterance, intent);
+			}
+			if (this.domain) {
+				nlp.assignDomain(locale, intent, this.domain);
 			}
 			if (answers) {
 				for (const answer of answers) {

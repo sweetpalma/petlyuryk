@@ -30,6 +30,7 @@ declare module '@nlpjs/basic' {
 		intent: string;
 		score: number;
 		from: User;
+		domain?: string;
 		classifications: Array<{
 			intent: string;
 			score: number;
@@ -76,6 +77,7 @@ declare module '@nlpjs/basic' {
 		addDocument(locale: string, utterance: string, intent: string): void;
 		addAnswer(locale: string, intent: string, answer: string): void;
 		addEntities(entities: NlpEntities, locale: string): void;
+		assignDomain(locale: string, intent: string, domain: string): void;
 		onIntent?: NlpHandler<User, Event>;
 	}
 

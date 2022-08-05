@@ -109,6 +109,7 @@ export default async (controller: Controller, testMode = false) => {
 		logger.info('neural:response', {
 			locale: response.locale,
 			intent: response.intent,
+			domain: response.domain || null,
 			text: response.text,
 			answer: response.answer || null,
 			score: response.score,

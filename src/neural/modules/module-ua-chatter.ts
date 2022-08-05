@@ -8,6 +8,7 @@ import UaAnecdote from '~/data/responses/ua-anecdote.json';
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Chatter',
+	domain: 'chatter',
 	locale: 'uk-UA',
 	data: [
 		{
@@ -42,10 +43,10 @@ export default new NeuralCorpus({
 		{
 			intent: 'chatter.howdy',
 			utterances: [
-				'справи',
-				'ся маєш',
+				'як справи',
+				'як ся маєш',
 				'чим займаєшся',
-				'робиш',
+				'що робиш',
 			],
 			answers: [
 				'HTTP 1.1 200 OK',
@@ -59,9 +60,9 @@ export default new NeuralCorpus({
 		{
 			intent: 'chatter.thanks',
 			utterances: [
-				'Тисну руку',
-				'Спасибі',
-				'Дякую',
+				'тисну руку',
+				'спасибі',
+				'дякую',
 			],
 			answers: [
 				'Радий допомогти.',
@@ -202,6 +203,20 @@ export default new NeuralCorpus({
 				'Я бінарно-небінарний.',
 				'Я бойовий гелікоптер.',
 				'Я бездушна машина.',
+			],
+		},
+		{
+			intent: 'chatter.annoying',
+			utterances: [
+				'ти задовбав',
+				'ти заєбав',
+				'ти набрид',
+				'ти бісиш',
+			],
+			answers: [
+				'Вибач.',
+				'Я стараюсь стати краще.',
+				'Сорян.',
 			],
 		},
 		{

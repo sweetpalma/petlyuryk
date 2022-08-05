@@ -82,6 +82,7 @@ const getDate = (userId: number) => {
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Market',
+	domain: 'age',
 	locale: 'uk-UA',
 	data: [
 		{

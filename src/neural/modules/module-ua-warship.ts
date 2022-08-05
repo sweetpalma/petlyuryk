@@ -7,6 +7,7 @@ import { NeuralCorpus } from '..';
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Misc',
+	domain: 'warship',
 	locale: 'uk-UA',
 	data: [
 		{

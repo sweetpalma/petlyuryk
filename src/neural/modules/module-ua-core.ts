@@ -38,6 +38,7 @@ const niceTryDownvote = [
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Core',
+	domain: 'core',
 	locale: 'uk-UA',
 	entities: {
 	  insult: {

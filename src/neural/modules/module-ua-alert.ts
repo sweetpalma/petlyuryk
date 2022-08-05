@@ -15,6 +15,7 @@ const getStatesWithAlerts = async () => {
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Misc',
+	domain: 'alert',
 	locale: 'uk-UA',
 	data: [
 		{

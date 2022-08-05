@@ -40,6 +40,7 @@ const getRateCoinBase = async (currencyCode: string) => {
 
 export default new NeuralCorpus({
 	name: 'Ukrainian Market',
+	domain: 'market',
 	locale: 'uk-UA',
 	entities: {
 	  currency: {
@@ -64,7 +65,6 @@ export default new NeuralCorpus({
 		{
 			intent: 'market.rate.all',
 			utterances: [
-				'курси',
 				'курс валют',
 				'валюта',
 				'риночок',

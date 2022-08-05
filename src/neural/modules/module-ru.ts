@@ -12,6 +12,7 @@ import RuCommon from '~/data/common/ru.json';
 
 export default new NeuralCorpus({
 	name: 'Russian Misc',
+	domain: 'ru',
 	locale: 'ru-Ru',
 	data: [
 		{
