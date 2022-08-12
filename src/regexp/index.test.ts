@@ -131,6 +131,7 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Заєбав хуюрик йобаний', true ],
 			[ 'Хуюрик, ти де?', true ],
 			[ 'Мда, хуюрик.', true ],
+			[ 'Пиздюрик', true ],
 		],
 	},
 	{
@@ -147,6 +148,23 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Хто Путін?', true ],
 			[ 'Путін хто?', true ],
 			[ 'Ох уж цей путін', true ],
+		],
+	},
+	{
+		intent: 'regexp.yushchenko.short',
+		cases: [
+			[ 'Ющенко?', true ],
+			[ 'Ющенко!', true ],
+			[ 'Ющенко', true ],
+			[ 'Хующенко', false ],
+		],
+	},
+	{
+		intent: 'regexp.yushchenko.long',
+		cases: [
+			[ 'Що там Ющенко?', true ],
+			[ 'Ющенко молодець!', true ],
+			[ 'Ох уж цей Ющенко наш...', true ],
 		],
 	},
 	{
