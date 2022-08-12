@@ -258,6 +258,16 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
+		semanticGroup: 'chatter.annoying',
+		expectedIntents: [ 'neural.uk.chatter.annoying' ],
+		cases: [
+			'ти заєбав',
+			'ти набрид',
+			'господи як же ти задовбав',
+			'ти сука бісиш',
+		],
+	},
+	{
 		semanticGroup: 'chatter.anecdote',
 		expectedIntents: [ 'neural.uk.chatter.anecdote' ],
 		cases: [
@@ -330,8 +340,12 @@ const testCases: Array<TestSuite> = [
 		semanticGroup: 'market.rate.all',
 		expectedIntents: [ 'neural.uk.market.rate.all' ],
 		cases: [
+			'курс',
 			'курс валюти',
-			'курс валюти',
+			'курс валют',
+			'скажи курс',
+			'як там риночок',
+			'що там ринок',
 		],
 	},
 	{

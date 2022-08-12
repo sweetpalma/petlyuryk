@@ -117,6 +117,18 @@ export default new NeuralCorpus({
 			],
 		},
 		{
+			intent: 'chatter.question',
+			utterances: [
+				'чому',
+				'коли',
+				'хто',
+			],
+			answers: [
+				'Не скажу.',
+				'А я звідки знаю?',
+			],
+		},
+		{
 			intent: 'chatter.who.you',
 			utterances: [
 				'ти бот',

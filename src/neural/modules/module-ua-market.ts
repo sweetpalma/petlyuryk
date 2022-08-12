@@ -65,8 +65,10 @@ export default new NeuralCorpus({
 		{
 			intent: 'market.rate.all',
 			utterances: [
+				'курс',
 				'курс валют',
 				'валюта',
+				'ситуація на ринку',
 				'риночок',
 				'ринок',
 			],
