@@ -145,7 +145,7 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	 */
 	public async updateValue(id: D['id'], field: keyof Omit<D, 'id'>, value: D[typeof field]) {
 		if (await this.exists(id)) {
-			await this.redis.call('json.set', this.getRedisKey(id), `$.${field}`, telejson.stringify(value));
+			await this.redis.call('json.set', this.getRedisKey(id), `$.${String(field)}`, telejson.stringify(value));
 		}
 	}
 
@@ -154,7 +154,7 @@ export abstract class RedisStore<D extends RedisStoreDocument> {
 	 */
 	public async updateIncrement(id: D['id'], field: keyof Omit<D, 'id'>, diff = 1) {
 		if (await this.exists(id)) {
-			await this.redis.call('json.numIncrBy', this.getRedisKey(id), `$.${field}`, diff);
+			await this.redis.call('json.numIncrBy', this.getRedisKey(id), `$.${String(field)}`, diff);
 		}
 	}
 

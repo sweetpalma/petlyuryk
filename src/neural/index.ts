@@ -4,7 +4,6 @@
  */
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
 import { dockStart } from '@nlpjs/basic';
-import { Bot } from '@nlpjs/bot';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -51,9 +50,6 @@ export default async (controller: Controller, testMode = false) => {
 
 	// Build custom language guesser:
 	const guess = languageGuess(container);
-
-	// Build new NLP.JS bot:
-	const bot = new Bot({ container });
 
 	// Load neural sub-modules:
 	const moduleList = readdirSync(join(__dirname, 'modules'));
