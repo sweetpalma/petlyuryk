@@ -31,7 +31,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 	// Prepare bot and retrieve bot information:
 	const telegram = new TelegramBot(token, { polling: true });
 	const me = await telegram.getMe();
-	const startupDate = new Date();
+	const startupDate = new Date().getTime();
 
 	// Store: Connect:
 	const store = new Store();
@@ -66,7 +66,7 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 			// - Messages without sender (conditions unclear)
 			// - Messages created before the bot started
 			// - Forwarded messages
-			if (!msg.from || !msg.text || msg.forward_date || new Date(msg.date * 1000) < startupDate) {
+			if (!msg.from || !msg.text || !!msg.forward_date || msg.date * 1000 < startupDate) {
 				return;
 			}
 
@@ -210,6 +210,13 @@ export const startTelegramBot = async (controller: Controller, token: string, ex
 			await telegram.sendMessage(chatId, sample(UaResponsesWelcome)!);
 		}
 
+	});
+
+	telegram.on('error', (error) => {
+		logger.error('bot:error', {
+			error,
+			stack: error.stack?.split('\n').map((t: string) => t.trim()),
+		});
 	});
 
 };
