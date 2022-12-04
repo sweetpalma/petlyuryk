@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nlpjs/basic": "^4.22.14",
+    "@nlpjs/bot": "^4.24.3",
     "@nlpjs/core": "^4.22.7",
     "@nlpjs/directline-connector": "^4.22.12",
     "@nlpjs/express-api-server": "^4.22.14",
