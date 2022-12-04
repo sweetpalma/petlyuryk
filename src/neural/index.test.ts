@@ -30,7 +30,7 @@ beforeAll(async () => {
 	// Mock axios for API requests:
 	jest.spyOn(axios, 'get').mockImplementation(async (path: string) => {
 		if (path.startsWith('https://russianwarship.rip/api/v1/statistics/latest')) {
-			return { data: { data: { date: '2022-10-10', stats: {} } } };
+			return { data: { data: { date: '2022-10-10', stats: {}, increase: {} } } };
 		}
 		if (path.startsWith('https://emapa.fra1.cdn.digitaloceanspaces.com')) {
 			return { data: { states: { a: { enabled: true }, b: { enabled: false } } } };
@@ -312,6 +312,7 @@ const testCases: Array<TestSuite> = [
 		semanticGroup: 'alert.all',
 		expectedIntents: [ 'neural.uk.alert.all' ],
 		cases: [
+			'де',
 			'де тривоги',
 			'де вибухи',
 			'де сирени',

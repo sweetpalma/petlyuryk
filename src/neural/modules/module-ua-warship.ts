@@ -5,6 +5,22 @@
 import axios from 'axios';
 import { NeuralCorpus } from '..';
 
+interface ResponseWarship {
+	date: string;
+	increase: { [key: string]: number };
+	stats: { [key: string]: number };
+}
+
+const CATEGORIES: Array<[string, string]> = [
+	[ 'personnel_units', 'орків' ],
+	[ 'tanks', 'танків' ],
+	[ 'planes', 'літаків' ],
+	[ 'helicopters', 'гелікоптерів' ],
+	[ 'armoured_fighting_vehicles', 'броньовиків' ],
+	[ 'artillery_systems', 'гармат' ],
+	[ 'cruise_missiles', 'ракет' ],
+];
+
 export default new NeuralCorpus({
 	name: 'Ukrainian Misc',
 	domain: 'warship',
@@ -20,21 +36,11 @@ export default new NeuralCorpus({
 			],
 			async handler(nlp, response) {
 				const res = await axios.get('https://russianwarship.rip/api/v1/statistics/latest');
-				const data = res.data.data as { date: string, stats: { [key: string]: number } };
-				response.answer = [
-					`Станом на ${data.date.replace(/\-/g, '.')} загальні бойові втрати русачків наступні:`,
-					'',
-					`${data.stats.personnel_units} орків`,
-					`${data.stats.tanks} танків`,
-					`${data.stats.planes} літаків`,
-					`${data.stats.helicopters} гелікоптерів`,
-					`${data.stats.warships_cutters} кораблів`,
-					`${data.stats.armoured_fighting_vehicles} бронетранспортерів`,
-					`${data.stats.artillery_systems} гармат`,
-					`${data.stats.cruise_missiles} ракет`,
-					'',
-					'Русні пизда!',
-				].join('\n');
+				const { date, stats, increase } = res.data.data as ResponseWarship;
+				const header = `Станом на ${date.replace(/\-/g, '.')} загальні бойові втрати русачків наступні:`;
+				const losses = CATEGORIES.map(([ key, label ]) => `${stats[key]} ${label} (+${increase[key]})`).join('\n');
+				const footer = 'Русні пизда!';
+				response.answer = [ header, losses, footer ].join('\n\n');
 			},
 		},
 	],
