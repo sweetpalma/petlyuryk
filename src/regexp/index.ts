@@ -29,7 +29,7 @@ const replies: Array<Reply> = [
 	{
 		intent: 'glory.capitalize',
 		triggers: [
-			rgx.matchPart(/україна/), // case sensitive
+			rgx.matchPart(/україн[аиі]/), // case sensitive
 		],
 		responses: [
 			'Україна пишеться з великої букви, синку.',
@@ -103,6 +103,47 @@ const replies: Array<Reply> = [
 			'Вінниця - це божий дар Україні.',
 			'Вінниця – новий Бабилон.',
 			'Вінниця - четвертий Рим.',
+		],
+	},
+
+	// Kherson:
+	{
+		intent: 'kherson',
+		triggers: [
+			rgx.matchPart(/херсон(ські|ці|ка|ець)/i),
+			rgx.matchPart(/херсон(у|і)?/i),
+		],
+		responses: [
+			'Херсон - це Україна.',
+			'Херсон - місто-герой.',
+			'Херсон - то любов і щастя.',
+			'Херсон - батьківщина кавунів.',
+			'Херсон - база.',
+		],
+	},
+
+	// Kherson:
+	{
+		intent: 'kherson',
+		triggers: [
+			rgx.matchPart(/херсон/i),
+		],
+		responses: [
+			'Херсон - це Україна.',
+			'Херсон - місто-герой.',
+			'Херсон - то любов і щастя.',
+			'Херсон - батьківщина кавунів.',
+			'Херсон - база.',
+		],
+	},
+
+	{
+		intent: 'chornobaivka',
+		triggers: [
+			rgx.matchPart(/чорнобаїв(ка|ку|ці)/i),
+		],
+		responses: [
+			'Чорнобаївка - русні роз\'їбаївка.',
 		],
 	},
 

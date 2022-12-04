@@ -92,6 +92,13 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.kherson',
+		cases: [
+			[ 'Що там в Херсоні?', true ],
+			[ 'Херсонські тут?', true ],
+		],
+	},
+	{
 		intent: 'regexp.belarus',
 		cases: [
 			[ 'Петлюрику, живе білорусь!', true ],
