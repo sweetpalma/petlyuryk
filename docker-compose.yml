@@ -4,7 +4,6 @@ services:
   # Petlyuryk: Redis Stack (RedisJSON, RediJSON and RedisInsight):
   redis:
     image: redis/redis-stack
-    # container_name: petlyuryk-redis
     restart: unless-stopped
     logging:
       driver: none
@@ -17,7 +16,6 @@ services:
 
   # Petlyuryk: Bot:
   bot:
-    # container_name: petlyuryk-bot
     restart: unless-stopped
     build: .
     depends_on:
@@ -26,6 +24,9 @@ services:
       - ./src:/app/src
       - ./public:/app/public
       - ./logs:/app/logs
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
     ports:
       - "${PETLYURYK_STATS_PORT:-2205}:8001"
     environment:
