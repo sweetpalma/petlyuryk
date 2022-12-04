@@ -2,6 +2,7 @@
  * Part of Petlyuryk by SweetPalma, all rights reserved.
  * This code is licensed under GNU GENERAL PUBLIC LICENSE, check LICENSE file for details.
  */
+declare module '@nlpjs/bot';
 declare module '@nlpjs/basic' {
 
 	/**
@@ -99,7 +100,7 @@ declare module '@nlpjs/basic' {
 	}
 
 	/**
-	 * NLP.JS core container.
+	 * NLP.JS container.
 	 */
 	export interface Container {
 		get<User, Event>(module: 'nlp'): Nlp<User, Event>;
@@ -107,9 +108,16 @@ declare module '@nlpjs/basic' {
 	}
 
 	/**
-	 * NLP.JS core container builder.
+	 * NLP.JS dock.
+	 */
+	export interface Dock extends Container {
+		getContainer(name?: string): Container;
+	}
+
+	/**
+	 * NLP.JS dock builder.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	export const dockStart: (opts: any) => Promise<Container>;
+	export const dockStart: (opts: any) => Promise<Dock>;
 
 }

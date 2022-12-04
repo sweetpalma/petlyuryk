@@ -4,6 +4,7 @@
  */
 /* eslint-disable @typescript-eslint/no-var-requires, @typescript-eslint/no-empty-function */
 import { dockStart } from '@nlpjs/basic';
+import { Bot } from '@nlpjs/bot';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -27,8 +28,8 @@ export const NEURAL_THRESHOLD = (
  */
 export default async (controller: Controller, testMode = false) => {
 
-	// Prepare basic NLP.JS container:
-	const container = await dockStart({
+	// Run basic NLP.JS dock:
+	const dock = await dockStart({
 		use: [ 'Basic', 'LangUk', 'LangRu' ],
 		settings: {
 			nlp: {
@@ -42,11 +43,17 @@ export default async (controller: Controller, testMode = false) => {
 		},
 	});
 
+	// Extract default container from it:
+	const container = dock.getContainer();
+
 	// Extract NLP module from container:
 	const nlp = container.get<ControllerUser, ControllerRequest>('nlp');
 
-	// Extract custom language guesser:
+	// Build custom language guesser:
 	const guess = languageGuess(container);
+
+	// Build new NLP.JS bot:
+	const bot = new Bot({ container });
 
 	// Load neural sub-modules:
 	const moduleList = readdirSync(join(__dirname, 'modules'));
