@@ -135,6 +135,7 @@ export default new NeuralCorpus({
 				'струмінь',
 				'струменя',
 				'живчик',
+				'пісьни',
 			],
 			answers: [
 				...UaResponseHostilePiss,
