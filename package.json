@@ -8,10 +8,11 @@
   "scripts": {
     "prepare": "husky install",
     "start": "npm run start:dev",
-    "start:dev": "nodemon -r dotenv/config --exitcrash ./src/index.ts",
+    "start:dev": "nodemon -r dotenv/config ./src/index.ts",
     "todo": "leasot -x src/**/*.ts public/**/*.js",
     "lint": "eslint src public --ext .ts,.js --max-warnings 8 --color",
     "lint:fix": "npm run lint -- --fix",
+    "format": "npm run lint:fix",
     "test": "jest --verbose --all --color ./src",
     "test:watch": "jest --watchAll ./src",
     "docker": "docker-compose up --build --remove-orphans || exit 0",
