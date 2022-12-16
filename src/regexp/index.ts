@@ -357,6 +357,15 @@ const replies: Array<Reply> = [
 			'Головка від хуя.',
 		],
 	},
+	{
+		intent: 'joke.privet',
+		triggers: [
+			rgx.matchFull(/пр(і|и)в(є|е)т/i),
+		],
+		responses: [
+			'Пукни в пакєт.',
+		],
+	},
 
 
 ];

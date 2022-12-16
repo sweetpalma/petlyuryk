@@ -272,6 +272,16 @@ const testCasesReply: Array<TestSuite> = [
 			[ 'Ня', false ],
 		],
 	},
+	{
+		intent: 'regexp.joke.privet',
+		cases: [
+			[ 'Привет', true ],
+			[ 'Прівет', true ],
+			[ 'Прівєт', true ],
+			[ 'Привєт', true ],
+			[ 'Привіт', false ],
+		],
+	},
 ];
 
 
