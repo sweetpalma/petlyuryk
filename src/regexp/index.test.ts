@@ -184,6 +184,14 @@ const testCasesReply: Array<TestSuite> = [
 		],
 	},
 	{
+		intent: 'regexp.yermak',
+		cases: [
+			[ '👍👍👍', true ],
+			[ '🤬 🙈 😡 😢', true ],
+			[ '👍', false ],
+		],
+	},
+	{
 		intent: 'regexp.avakov',
 		cases: [
 			[ 'Аваков', true ],

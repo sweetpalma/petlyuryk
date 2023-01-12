@@ -237,6 +237,18 @@ const replies: Array<Reply> = [
 		],
 	},
 
+	// Yermak Emoji Reaction:
+	{
+		intent: 'yermak',
+		triggers: [
+			/^(\p{Emoji_Presentation}|\s){3,}$/gu,
+		],
+		responses: [
+			'Єрмак, йди нахуй',
+			'👍🖕',
+		],
+	},
+
 	// Avakov:
 	{
 		intent: 'avakov',
