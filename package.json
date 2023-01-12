@@ -7,7 +7,7 @@
   "description": "Nationalistic Ukrainian telegram bot.",
   "scripts": {
     "prepare": "husky install",
-    "start": "npm run start:dev",
+    "start": "npm run start:dev -- --exitoncrash",
     "start:dev": "nodemon -r dotenv/config ./src/index.ts",
     "todo": "leasot -x src/**/*.ts public/**/*.js",
     "lint": "eslint src public --ext .ts,.js --max-warnings 8 --color",
