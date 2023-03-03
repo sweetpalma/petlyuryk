@@ -6,9 +6,10 @@ import axios from 'axios';
 import { NeuralCorpus } from '..';
 
 
+const ALERT_API_URL = 'https://vadimklimenko.com/map/statuses.json';
 const getStatesWithAlerts = async () => {
 	type Result = {	states: { [key: string]: { enabled: boolean } } };
-	const { data } = await axios.get<Result>('https://emapa.fra1.cdn.digitaloceanspaces.com/statuses.json');
+	const { data } = await axios.get<Result>(ALERT_API_URL);
 	return Object.keys(data.states).filter(x => data.states[x].enabled).map(x => x.replace('\'', ''));
 };
 
