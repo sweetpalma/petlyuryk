@@ -4,6 +4,7 @@
  */
 import { NeuralCorpus } from '..';
 import UaAnecdote from '~/data/responses/ua-anecdote.json';
+import UaHymn from '~/data/responses/ua-hymn.json';
 
 
 export default new NeuralCorpus({
@@ -229,6 +230,26 @@ export default new NeuralCorpus({
 				'Вибач.',
 				'Я стараюсь стати краще.',
 				'Сорян.',
+			],
+		},
+		{
+			intent: 'chatter.crimea',
+			utterances: [
+				'кому належить крим',
+				'чий крим',
+			],
+			answers: [
+				'Крим - це Україна.',
+			],
+		},
+		{
+			intent: 'chatter.hymn',
+			utterances: [
+				'заспівай гімн',
+				'гімн',
+			],
+			answers: [
+				UaHymn.join('\n'),
 			],
 		},
 		{

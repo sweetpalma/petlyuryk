@@ -268,6 +268,22 @@ const testCases: Array<TestSuite> = [
 		],
 	},
 	{
+		semanticGroup: 'chatter.ua.crimea',
+		expectedIntents: [ 'neural.uk.chatter.crimea' ],
+		cases: [
+			'кому належить Крим?',
+			'чий Крим?',
+		],
+	},
+	{
+		semanticGroup: 'chatter.ua.hymn',
+		expectedIntents: [ 'neural.uk.chatter.hymn' ],
+		cases: [
+			'заспівай гімн',
+			'гімн України',
+		],
+	},
+	{
 		semanticGroup: 'chatter.anecdote',
 		expectedIntents: [ 'neural.uk.chatter.anecdote' ],
 		cases: [
