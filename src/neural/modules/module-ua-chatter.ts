@@ -246,6 +246,7 @@ export default new NeuralCorpus({
 			intent: 'chatter.hymn',
 			utterances: [
 				'заспівай гімн',
+				'гімн України',
 				'гімн',
 			],
 			answers: [
